@@ -73,10 +73,10 @@ export const Profile = () => {
     }));
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSelectChange = (e: SelectChangeEvent<MAYJOR | typeof MAYJOR>) => {
     setUserData((prevData) => ({
       ...prevData,
-      mayjor: e.target.value as MAYJOR,
+      mayjor: e.target.value as MAYJOR, // Ensure correct type casting
     }));
   };
 
@@ -97,14 +97,18 @@ export const Profile = () => {
     setEditableField(field); // Enable editing mode for the specific field
   };
 
-  const renderField = (field: string, label: string, isEditable: boolean) => {
+  const renderField = (
+    field: keyof User,
+    label: string,
+    isEditable: boolean
+  ) => {
     return isEditable ? (
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <TextField
           fullWidth
           label={label}
           name={field}
-          value={userData[field]}
+          value={userData[field] || ""}
           onChange={handleInputChange}
           required
         />

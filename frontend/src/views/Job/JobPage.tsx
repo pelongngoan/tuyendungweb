@@ -150,7 +150,7 @@ const JobPage: React.FC = () => {
       <Pagination
         count={totalPages}
         page={page}
-        onChange={(e, value) => setPage(value)}
+        onChange={(_e, value) => setPage(value)}
         style={{ marginTop: "1rem" }}
       />
 
