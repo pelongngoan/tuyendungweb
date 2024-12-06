@@ -12,6 +12,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
 import userApi from "../../api/user";
@@ -88,6 +89,7 @@ export const Profile = () => {
       setMessage("Cập nhật thông tin người dùng thành công!");
 
       setEditableField(null); // Exit editing mode after successful update
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setMessage("Error updating user data");
     }
