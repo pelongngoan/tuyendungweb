@@ -27,7 +27,9 @@ app.use(router);
 
 //error middleware
 app.use(errorMiddleware);
-
+app.get("/", (req, res) => {
+  res.json({ message: "Hello from API" });
+});
 app.listen(PORT, () => {
   console.log(`Dev Server running on port: ${PORT}`);
 });
