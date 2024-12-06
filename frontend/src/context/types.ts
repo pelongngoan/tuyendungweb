@@ -15,8 +15,17 @@ export type RegisterParams = {
   password: string;
 };
 export type UserDataType = {
-  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   password: string;
+  accountType: string;
+  contact?: string;
+  location?: string;
+  profileUrl?: string;
+  cvUrl?: string;
+  jobTitle?: string;
+  about?: string;
 };
 export type RequestParams = {
   resource_type: RESOURCETYPE;

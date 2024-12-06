@@ -1,3 +1,9 @@
+interface NavItem {
+  title: string;
+  path: string;
+  icon?: JSX.Element;
+  children?: NavItem[];
+}
 import React, { useState } from "react";
 import {
   AppBar,
@@ -12,37 +18,39 @@ import {
   List,
   ListItem,
   ListItemText,
+  Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { navigation } from "../navigation";
-
-interface NavItem {
-  title: string;
-  path: string;
-  icon?: JSX.Element; // Include the icon field
-  children?: NavItem[];
-}
+import { navigation } from "../navigation"; // Import the navigation function
+import { UserDataType } from "../context/types"; // Ensure you import the necessary types
 
 interface HeaderProps {
   title?: string;
-  logo?: React.ReactNode;
   onNavigate: (destination: string) => void;
+  user: UserDataType | null; // User object
+  onLogout: () => void; // Logout handler
+  onUpdateProfile: () => void; // Update profile handler
 }
 
-export const Header = ({ onNavigate, logo }: HeaderProps) => {
+export const Header = ({
+  onNavigate,
+  user,
+  onLogout,
+  onUpdateProfile,
+}: HeaderProps) => {
   const isMobile = useMediaQuery("(max-width:768px)");
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuItems, setMenuItems] = useState<NavItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [avatarMenuAnchor, setAvatarMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
 
   const handleOpenMenu = (
     event: React.MouseEvent<HTMLElement>,
     children?: NavItem[]
   ) => {
     setAnchorEl(event.currentTarget);
-    console.log(children);
-
     setMenuItems(children || []);
   };
 
@@ -52,6 +60,14 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
 
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
+  };
+
+  const handleAvatarMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAvatarMenuAnchor(event.currentTarget);
+  };
+
+  const handleAvatarMenuClose = () => {
+    setAvatarMenuAnchor(null);
   };
 
   return (
@@ -79,18 +95,16 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
           }}
           onClick={() => onNavigate("")}
         >
-          {logo ? (
-            logo
-          ) : (
-            <Box
-              component="img"
-              src={"../assets/logo.jpg"}
-              alt="Logo"
-              sx={{ width: 50, height: 50 }}
-            />
-          )}
+          <img
+            src="https://raw.githubusercontent.com/pelongngoan/tuyendungweb/224ceb10bbebc23be112aa52a0a4d740eab08967/frontend/src/assets/logo.jpg"
+            alt="Logo"
+            style={{
+              width: "80px",
+              height: "80px",
+              objectFit: "cover",
+            }}
+          />
         </Box>
-
         {!isMobile ? (
           <Box sx={{ display: "flex", gap: "2rem" }}>
             {navigation().map((nav, index) =>
@@ -149,17 +163,6 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
                     onNavigate(child.path);
                   }}
                 >
-                  {child.icon && (
-                    // <Box
-                    //   sx={{
-                    //     display: "flex",
-                    //     alignItems: "center",
-                    //     marginRight: "10px",
-                    //   }}
-                    // >
-                    <>{child.icon.key}</>
-                    // </Box>
-                  )}
                   {child.icon}
                   {child.title}
                 </MenuItem>
@@ -171,8 +174,6 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
             <MenuIcon sx={{ color: "#000" }} />
           </IconButton>
         )}
-
-        {/* Mobile Drawer */}
         <Drawer
           anchor="right"
           open={drawerOpen}
@@ -200,41 +201,60 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
             </List>
           </Box>
         </Drawer>
-
-        {/* Auth Buttons */}
         <Box
           sx={{
-            display: isMobile ? "none" : "flex",
+            display: "flex",
             alignItems: "center",
             gap: "1rem",
           }}
         >
-          <Button
-            sx={{
-              color: "#000",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                color: "#1976d2",
-              },
-            }}
-            onClick={() => onNavigate("register")}
-          >
-            Đăng Ký
-          </Button>
-          <Button
-            sx={{
-              color: "#000",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                color: "#1976d2",
-              },
-            }}
-            onClick={() => onNavigate("login")}
-          >
-            Đăng Nhập
-          </Button>
+          {user ? (
+            <>
+              <Avatar
+                src={user.profileUrl || ""}
+                alt={user.firstName}
+                onClick={handleAvatarMenuOpen}
+                sx={{ cursor: "pointer" }}
+              />
+              <Menu
+                anchorEl={avatarMenuAnchor}
+                open={Boolean(avatarMenuAnchor)}
+                onClose={handleAvatarMenuClose}
+              >
+                <MenuItem onClick={onUpdateProfile}>Update Profile</MenuItem>
+                <MenuItem onClick={onLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <>
+              <Button
+                sx={{
+                  color: "#000",
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  "&:hover": {
+                    color: "#1976d2",
+                  },
+                }}
+                onClick={() => onNavigate("register")}
+              >
+                Đăng Ký
+              </Button>
+              <Button
+                sx={{
+                  color: "#000",
+                  textTransform: "none",
+                  fontSize: "1rem",
+                  "&:hover": {
+                    color: "#1976d2",
+                  },
+                }}
+                onClick={() => onNavigate("login")}
+              >
+                Đăng Nhập
+              </Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

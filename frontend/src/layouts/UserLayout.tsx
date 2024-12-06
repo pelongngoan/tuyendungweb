@@ -2,12 +2,20 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Box } from "@mui/material";
+import { useAuth } from "../context/useAuth";
 
 const UserLayout = () => {
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const handleNavigation = (destination: string) => {
     navigate(`/${destination}`);
+  };
+  const handleLogout = () => {
+    logout();
+  };
+  const handleUpdate = () => {
+    logout();
   };
 
   return (
@@ -18,7 +26,13 @@ const UserLayout = () => {
         minHeight: "100vh",
       }}
     >
-      <Header title="My App" onNavigate={handleNavigation} />
+      <Header
+        title="My App"
+        onNavigate={handleNavigation}
+        onLogout={handleLogout}
+        onUpdateProfile={handleUpdate}
+        user={user}
+      />
       <Box
         component="main"
         sx={{
