@@ -1,16 +1,33 @@
-// src/index.ts
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
-
+import bodyParser from "body-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import dbConnection from "./config/config";
+import router from "./routes";
+import errorMiddleware from "./middlewares/error";
+import cors from "cors";
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+const PORT = process.env.PORT || 8800;
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+// MONGODB CONNECTION
+dbConnection();
+
+// middlenames
+app.use(cors());
+app.use(mongoSanitize());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(router);
+
+//error middleware
+app.use(errorMiddleware);
+
+app.listen(PORT, () => {
+  console.log(`Dev Server running on port: ${PORT}`);
 });
