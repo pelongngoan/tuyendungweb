@@ -1,9 +1,3 @@
-interface NavItem {
-  title: string;
-  path: string;
-  icon?: JSX.Element;
-  children?: NavItem[];
-}
 import React, { useState } from "react";
 import {
   AppBar,
@@ -19,17 +13,18 @@ import {
   ListItem,
   ListItemText,
   Avatar,
+  Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { navigation } from "../navigation"; // Import the navigation function
-import { UserDataType } from "../context/types"; // Ensure you import the necessary types
+import { navigation, NavItem } from "../navigation";
+import { UserDataType } from "../context/types";
 
 interface HeaderProps {
   title?: string;
   onNavigate: (destination: string) => void;
-  user: UserDataType | null; // User object
-  onLogout: () => void; // Logout handler
-  onUpdateProfile: () => void; // Update profile handler
+  user: UserDataType | null;
+  onLogout: () => void;
+  onUpdateProfile: () => void;
 }
 
 export const Header = ({
@@ -74,51 +69,46 @@ export const Header = ({
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#fff",
+        backgroundColor: "#1976d2",
+        height: 56,
         boxShadow: "none",
-        borderBottom: "1px solid #ddd",
       }}
     >
       <Toolbar
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          padding: "0 2rem",
+          height: "100%",
+          minHeight: "56px",
+          padding: "0 16px",
         }}
       >
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            "&:hover": { opacity: 0.8 },
-          }}
+          className="logo"
           onClick={() => onNavigate("")}
+          sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}
         >
           <img
             src="https://raw.githubusercontent.com/pelongngoan/tuyendungweb/224ceb10bbebc23be112aa52a0a4d740eab08967/frontend/src/assets/logo.jpg"
             alt="Logo"
-            style={{
-              width: "80px",
-              height: "80px",
-              objectFit: "cover",
-            }}
+            style={{ width: "40px", height: "40px" }}
           />
         </Box>
+
         {!isMobile ? (
-          <Box sx={{ display: "flex", gap: "2rem" }}>
+          <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
             {navigation().map((nav, index) =>
               nav.children ? (
                 <Button
                   key={index}
                   sx={{
-                    color: "#000",
-                    textTransform: "none",
-                    fontSize: "1rem",
-                    fontWeight: index === 0 ? "bold" : "normal",
+                    color: "white",
+                    textTransform: "capitalize",
+                    fontWeight: 500,
+                    borderRadius: "8px",
+                    padding: "6px 12px",
                     "&:hover": {
-                      color: "#1976d2",
-                      borderBottom: "2px solid #1976d2",
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
                     },
                   }}
                   onClick={(event) => handleOpenMenu(event, nav.children)}
@@ -129,13 +119,13 @@ export const Header = ({
                 <Button
                   key={index}
                   sx={{
-                    color: "#000",
-                    textTransform: "none",
-                    fontSize: "1rem",
-                    fontWeight: index === 0 ? "bold" : "normal",
+                    color: "white",
+                    textTransform: "capitalize",
+                    fontWeight: 500,
+                    borderRadius: "8px",
+                    padding: "6px 12px",
                     "&:hover": {
-                      color: "#1976d2",
-                      borderBottom: "2px solid #1976d2",
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
                     },
                   }}
                   onClick={() => onNavigate(nav.path)}
@@ -144,16 +134,11 @@ export const Header = ({
                 </Button>
               )
             )}
+
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
-              sx={{
-                "& .MuiPaper-root": {
-                  borderRadius: "10px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                },
-              }}
             >
               {menuItems.map((child, childIndex) => (
                 <MenuItem
@@ -170,10 +155,14 @@ export const Header = ({
             </Menu>
           </Box>
         ) : (
-          <IconButton onClick={() => toggleDrawer(true)}>
-            <MenuIcon sx={{ color: "#000" }} />
+          <IconButton
+            onClick={() => toggleDrawer(true)}
+            sx={{ color: "white" }}
+          >
+            <MenuIcon />
           </IconButton>
         )}
+
         <Drawer
           anchor="right"
           open={drawerOpen}
@@ -201,21 +190,40 @@ export const Header = ({
             </List>
           </Box>
         </Drawer>
+
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: "1rem",
+            gap: "0.5rem",
           }}
         >
           {user ? (
             <>
-              <Avatar
-                src={user.profileUrl || ""}
-                alt={user.firstName}
+              <Box
                 onClick={handleAvatarMenuOpen}
-                sx={{ cursor: "pointer" }}
-              />
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "white",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                  }}
+                >
+                  {user.firstName}
+                </Typography>
+                <Avatar
+                  src={user.profileUrl || ""}
+                  alt={user.firstName}
+                  sx={{ width: 32, height: 32, cursor: "pointer" }}
+                />
+              </Box>
               <Menu
                 anchorEl={avatarMenuAnchor}
                 open={Boolean(avatarMenuAnchor)}
@@ -229,11 +237,14 @@ export const Header = ({
             <>
               <Button
                 sx={{
-                  color: "#000",
-                  textTransform: "none",
-                  fontSize: "1rem",
+                  color: "white",
+                  fontSize: "14px",
+                  textTransform: "capitalize",
+                  fontWeight: 500,
+                  borderRadius: "8px",
+                  padding: "6px 12px",
                   "&:hover": {
-                    color: "#1976d2",
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
                   },
                 }}
                 onClick={() => onNavigate("register")}
@@ -242,11 +253,14 @@ export const Header = ({
               </Button>
               <Button
                 sx={{
-                  color: "#000",
-                  textTransform: "none",
-                  fontSize: "1rem",
+                  color: "white",
+                  fontSize: "14px",
+                  textTransform: "capitalize",
+                  fontWeight: 500,
+                  borderRadius: "8px",
+                  padding: "6px 12px",
                   "&:hover": {
-                    color: "#1976d2",
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
                   },
                 }}
                 onClick={() => onNavigate("login")}

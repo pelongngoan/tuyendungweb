@@ -10,8 +10,15 @@ import {
   CardContent,
   Divider,
 } from "@mui/material";
+import { navigation } from "../navigation";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (destination: string) => {
+    navigate(`/${destination}`);
+  };
   return (
     <Box>
       {/* Header Section */}
@@ -47,21 +54,15 @@ const Home = () => {
           Tìm hiểu nghề nghiệp và chuyên môn dành cho bạn
         </Typography>
         <Grid container spacing={2} justifyContent="center">
-          {[
-            "Phát Triển Kinh Doanh & Bán Hàng",
-            "Tài Chính & Kế Toán",
-            "Quản Lý Sản Phẩm & Dự Án",
-            "Hành Chính Nhân Sự",
-            "Quản Lý",
-            "Công Nghệ Thông Tin & IT",
-            "Thiết Kế",
-            "Marketing",
-            "Truyền Thông / Media",
-            "Vận Hành",
-          ].map((career, index) => (
+          {navigation()[0].children?.map((nav, index) => (
             <Grid item key={index}>
-              <Button variant="outlined" sx={{ borderRadius: 3 }}>
-                {career}
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 3, display: "flex", alignItems: "center" }}
+                onClick={() => handleNavigation(nav.path)}
+              >
+                {nav.icon}
+                {nav.title}
               </Button>
             </Grid>
           ))}
@@ -78,7 +79,7 @@ const Home = () => {
       {/* Testimonials Section */}
       <Container sx={{ py: 4 }}>
         <Typography variant="h5" align="center" gutterBottom>
-          Người Dùng Glints Nói Gì?
+          Người Dùng InternHub Nói Gì?
         </Typography>
         <Grid container spacing={4}>
           {[

@@ -3,7 +3,6 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Box } from "@mui/material";
 import { useAuth } from "../context/useAuth";
-
 const UserLayout = () => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ const UserLayout = () => {
     logout();
   };
   const handleUpdate = () => {
-    logout();
+    navigate("profile");
   };
 
   return (

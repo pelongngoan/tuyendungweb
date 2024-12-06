@@ -1,8 +1,18 @@
 import WorkIcon from "@mui/icons-material/Work";
 import BusinessIcon from "@mui/icons-material/Business";
 import InfoIcon from "@mui/icons-material/Info";
+import England from "../assets/england.svg";
+import Arab from "../assets/arab.svg";
+import China from "../assets/china.svg";
+import France from "../assets/france.svg";
+import Germany from "../assets/germany.svg";
+import Japan from "../assets/japan.svg";
+import Korea from "../assets/korea.svg";
+import Russia from "../assets/russia.svg";
+import Economy from "../assets/economy.svg";
+import Tradition from "../assets/tradition.svg";
 
-interface NavItem {
+export interface NavItem {
   title: string;
   path: string;
   icon?: JSX.Element;
@@ -16,24 +26,24 @@ export const navigation = (): NavItem[] => [
     icon: <WorkIcon />,
     children: [
       {
-        title: "Sư phạm Tiếng Anh",
+        title: "Tiếng Anh",
         path: "job/english",
         icon: (
           <img
-            src="https://github.com/pelongngoan/tuyendungweb/blob/main/frontend/src/assets/england.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={England}
+            alt="English"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
       {
-        title: "NNVHCNNTA",
-        path: "job/nnvhcnnta",
+        title: "Văn hóa và truyền thông xuyên quốc gia",
+        path: "job/tradition",
         icon: (
           <img
-            src="../assets/england.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Tradition}
+            alt="Tradition"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -42,9 +52,9 @@ export const navigation = (): NavItem[] => [
         path: "job/korean",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Korea}
+            alt="Korea"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -53,9 +63,9 @@ export const navigation = (): NavItem[] => [
         path: "job/japanese",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Japan}
+            alt="Japan"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -64,9 +74,9 @@ export const navigation = (): NavItem[] => [
         path: "job/russia",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Russia}
+            alt="Russia"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -75,9 +85,9 @@ export const navigation = (): NavItem[] => [
         path: "job/chinese",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={China}
+            alt="China"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -86,20 +96,20 @@ export const navigation = (): NavItem[] => [
         path: "job/arap",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Arab}
+            alt="Arab"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
       {
-        title: "KTTC",
-        path: "job/kttc",
+        title: "Kinh tế - Tài chính",
+        path: "job/economy",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Economy}
+            alt="economy"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -108,9 +118,9 @@ export const navigation = (): NavItem[] => [
         path: "job/german",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={Germany}
+            alt="Germany"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },
@@ -119,9 +129,9 @@ export const navigation = (): NavItem[] => [
         path: "job/french",
         icon: (
           <img
-            src="/path/to/korean-flag.svg"
-            alt="Hàn"
-            style={{ width: 24, height: 24 }}
+            src={France}
+            alt="France"
+            style={{ width: "24px", height: "24px" }}
           />
         ),
       },

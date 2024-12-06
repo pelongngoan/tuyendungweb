@@ -3,6 +3,18 @@ import Jobs from "../models/jobModel";
 import Companies from "../models/companiesModel";
 import { Request, Response, NextFunction } from "express";
 
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const userRole = req.body.user.role; // Assuming the role is attached to the user object
+
+  if (userRole !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Permission denied. Admin access only.",
+    });
+  }
+
+  next();
+};
 interface JobPost {
   jobTitle: string;
   jobType: string;

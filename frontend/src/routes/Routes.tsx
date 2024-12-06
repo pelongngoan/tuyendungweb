@@ -5,14 +5,15 @@ import Home from "../views/Home";
 import Register from "../views/Register/Register";
 import Login from "../views/Login/Login";
 import { About } from "../views/About/About";
-import { Account } from "../views/Account/Account";
 import { UserProvider } from "../context/useAuth";
 import { Category } from "../views/Category/Category";
 import { Company } from "../views/Company";
 import { Blog } from "../views/Blog";
-import Job from "../views/Job";
+import Job from "../views/Job/Job";
 import GuestRoute from "./GuestRoute";
 import Dashboard from "../views/Dashboard/Dashboard";
+import JobDetail from "../views/Job/JobDetail";
+import { Profile } from "../views/Profile/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -49,10 +50,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "account",
+        path: "profile",
         element: (
           <ProtectedRoute>
-            <Account />
+            <Profile />
           </ProtectedRoute>
         ),
       },
@@ -65,7 +66,11 @@ export const router = createBrowserRouter([
         ),
         children: [
           {
-            path: "nnvhcnnta",
+            path: "english",
+            element: <Job />,
+          },
+          {
+            path: "tradition",
             element: <Job />,
           },
           {
@@ -89,7 +94,7 @@ export const router = createBrowserRouter([
             element: <Job />,
           },
           {
-            path: "kttc",
+            path: "economy",
             element: <Job />,
           },
           {
@@ -101,6 +106,10 @@ export const router = createBrowserRouter([
             element: <Job />,
           },
         ],
+      },
+      {
+        path: "/jobDetail",
+        element: <JobDetail />,
       },
       {
         path: "company",

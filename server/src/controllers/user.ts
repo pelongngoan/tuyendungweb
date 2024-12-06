@@ -1,17 +1,15 @@
 import mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
-import Users from "../models/userModel";
+import Users, { MAYJOR } from "../models/userModel";
 
-// Define types for the request body if needed, or use `req.body` directly for dynamic typing
 interface UpdateUserRequestBody {
   firstName: string;
   lastName: string;
   email: string;
-  contact: string;
-  location?: string;
-  profileUrl?: string;
-  jobTitle: string;
-  about: string;
+  password: string;
+  accountType: string;
+  contact?: string;
+  mayjor?: MAYJOR;
 }
 
 export const updateUser = async (
@@ -19,19 +17,11 @@ export const updateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    contact,
-    location,
-    profileUrl,
-    jobTitle,
-    about,
-  }: UpdateUserRequestBody = req.body;
+  const { firstName, lastName, email, contact, mayjor }: UpdateUserRequestBody =
+    req.body;
 
   try {
-    if (!firstName || !lastName || !email || !contact || !jobTitle || !about) {
+    if (!firstName || !lastName || !email || !contact) {
       return next(new Error("Please provide all required fields"));
     }
 
@@ -47,10 +37,7 @@ export const updateUser = async (
       lastName,
       email,
       contact,
-      location,
-      profileUrl,
-      jobTitle,
-      about,
+      mayjor,
       _id: id,
     };
 
@@ -83,12 +70,18 @@ export const getUser = async (
   next: NextFunction
 ) => {
   try {
-    const id = req.body.user.userId;
+    // Get the userId from the URL params
+    const { userId } = req.params;
 
-    const user = await Users.findById({ _id: id });
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.status(404).send("Invalid User ID");
+      return;
+    }
+
+    const user = await Users.findById(userId);
 
     if (!user) {
-      res.status(200).send({
+      res.status(404).send({
         message: "User Not Found",
         success: false,
       });

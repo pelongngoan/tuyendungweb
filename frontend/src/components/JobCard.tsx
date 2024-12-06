@@ -1,42 +1,93 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Button } from "@mui/material";
-
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Button,
+  Divider,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 interface JobCardProps {
   companyName: string;
   location: string;
-  industry: string;
+  salary: string;
   positions: number;
   lastActivity: string;
+  logo: string; // Assuming logo URL is passed
+  jobTitle: string;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
   companyName,
   location,
-  industry,
+  salary,
   positions,
   lastActivity,
+  logo,
+  jobTitle,
 }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate("/jobDetail/");
+  };
   return (
-    <Card sx={{ width: "300px", margin: "16px", borderRadius: "8px" }}>
+    <Card
+      sx={{
+        width: "100%",
+        margin: "16px",
+        borderRadius: "8px",
+        border: "1px solid #2196f3",
+      }}
+    >
       <CardContent>
-        <Typography variant="h6" fontWeight="bold">
-          {companyName}
+        {/* Company Logo */}
+        <Box display="flex" alignItems="center" mb={2}>
+          <img
+            src={logo}
+            alt={companyName}
+            style={{ width: 50, height: 50, marginRight: 16 }}
+          />
+          <Typography variant="h6" fontWeight="bold" noWrap>
+            {companyName}
+          </Typography>
+        </Box>
+
+        {/* Job Title */}
+        <Typography variant="h6" fontWeight="bold" mb={1}>
+          {jobTitle}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {location}
-        </Typography>
-        <Typography variant="body2" color="primary">
-          {industry}
-        </Typography>
-        <Box mt={2}>
-          <Typography variant="body2">
+
+        {/* Job Details */}
+        <Box mb={2}>
+          <Typography variant="body2" color="text.secondary">
+            {location}
+          </Typography>
+          <Typography variant="body2" color="primary" fontWeight="bold">
+            {salary}
+          </Typography>
+        </Box>
+
+        {/* Positions and Last Activity */}
+        <Box display="flex" justifyContent="space-between" mb={2}>
+          <Typography variant="body2" color="text.secondary">
             <strong>{positions}</strong> vị trí đang tuyển
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Hoạt động lần cuối {lastActivity}
+            Còn {lastActivity}
           </Typography>
         </Box>
-        <Button variant="outlined" sx={{ marginTop: "16px" }}>
+
+        {/* Divider */}
+        <Divider sx={{ marginBottom: 2 }} />
+
+        {/* View Details Button */}
+        <Button
+          variant="outlined"
+          sx={{ width: "100%" }}
+          onClick={handleNavigation}
+        >
           Xem chi tiết
         </Button>
       </CardContent>

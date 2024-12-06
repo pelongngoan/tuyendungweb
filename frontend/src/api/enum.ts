@@ -6,42 +6,17 @@ enum STATE {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
 }
-enum RESOURCETYPE {
-  GPU = "GPU",
-  GCU = "GCU",
-  RAM = "RAM",
-  DISK = "DISK",
-}
-enum STATUSREQUEST {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-}
-enum REQUESTSTATUS {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-  CANCELLED = "CANCELLED",
-  QUEUED = "QUEUED",
-  COMPLETED = "COMPLETED",
-}
-enum RESOURCESTATUS {
-  AVAILABLE = "AVAILABLE",
-  ALLOCATED = "ALLOCATED",
-  MAINTENANCE = "MAINTENANCE",
-}
-enum APPROVALSTATUS {
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
-  QUEUED = "QUEUED",
+enum MAYJOR {
+  England = "England",
+  Arab = "Arab",
+  China = "China",
+  France = "France",
+  Germany = "Germany",
+  Japan = "Japan",
+  Korea = "Korea",
+  Russia = "Russia",
+  Economy = "Economy",
+  Tradition = "Tradition",
 }
 
-export {
-  ROLE,
-  STATE,
-  RESOURCETYPE,
-  REQUESTSTATUS,
-  STATUSREQUEST,
-  RESOURCESTATUS,
-  APPROVALSTATUS,
-};
+export { ROLE, STATE, MAYJOR };

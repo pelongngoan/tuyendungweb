@@ -34,8 +34,7 @@ export const UserProvider = ({ children }: Props) => {
   useEffect(() => {
     // Retrieve user and token from localStorage on mount
     const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-
+    const storedToken = localStorage.getItem("accessToken");
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
@@ -52,7 +51,9 @@ export const UserProvider = ({ children }: Props) => {
       setUser(response.user);
       setToken(response.token);
       localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("accessToken", response.token); // Ensure it's being set
+
+      console.log("Token saved in localStorage:", response.token); // Log token
 
       navigate("/home");
     } catch (err) {
@@ -87,7 +88,7 @@ export const UserProvider = ({ children }: Props) => {
     }
   };
 
-  const isLoggedIn = () => !!token;
+  const isLoggedIn = () => !!user;
 
   const handleLogout = () => {
     setUser(null);

@@ -1,82 +1,31 @@
-import {
-  APPROVALSTATUS,
-  REQUESTSTATUS,
-  RESOURCETYPE,
-  ROLE,
-  STATE,
-  STATUSREQUEST,
-} from "./enum";
+import { MAYJOR } from "./enum";
 
-type Account = {
-  id: string;
-  email: string;
-  role: ROLE;
-  password: string;
-  state: STATE | string;
-  option: string | null;
-  createdAt: number;
-  updatedAt: number;
-};
 type User = {
-  userId: number;
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  passwordHash: string;
-  role: ROLE;
-  isActive: boolean;
-  otps: OTP;
-  requests: Request;
-  approvals: Approval;
-  createdAt: string;
-  updatedAt: string;
+  accountType: string;
+  contact?: string;
+  mayjor?: MAYJOR | undefined;
 };
-type OTP = {
-  id: number;
-  otpCode: string;
-  createdAt: string;
-  expiresAt: string;
-  user: User;
-  expired: string;
+type IJobDetail = {
+  desc: string;
+  requirements: string;
 };
-type Request = {
-  requestId: number;
-  user: User;
-  resourceType: RESOURCETYPE;
-  quantity: number;
-  startTime: string;
-  end_time: string;
-  statusRequest: STATUSREQUEST;
-  reason: string;
-  timeUsage: number;
-  approval: Approval;
-  allocations: Allocation;
-  createdAt: string;
-  updatedAt: string;
-  equestStatus: REQUESTSTATUS;
+
+type IJob = {
+  _id: string; // ID of the job (MongoDB ObjectId)
+  company: string; // ID of the company (MongoDB ObjectId or string reference)
+  jobTitle: string;
+  jobType: string;
+  location: string;
+  salary: number;
+  vacancies?: number; // Optional field
+  experience: number;
+  detail: IJobDetail[]; // Array of job detail objects
+  application: string[]; // Array of user IDs (MongoDB ObjectIds or strings)
+  createdAt?: string; // Optional timestamps (added by Mongoose)
+  updatedAt?: string; // Optional timestamps (added by Mongoose)
 };
-type Approval = {
-  approvalId: number;
-  request: Request;
-  admin: User;
-  approvalStatus: APPROVALSTATUS;
-  comments: string;
-  approvedAt: string;
-};
-type Allocation = {
-  allocationId: number;
-  request: Request;
-  resource: Resource;
-  allocatedQuantity: number;
-  allocatedAt: string;
-  releasedAt: string;
-};
-type Resource = {
-  resourceId: number;
-  resourceType: RESOURCETYPE;
-  quantity: string;
-  statusResources: REQUESTSTATUS;
-  allocations: Allocation;
-  createdAt: string;
-  updatedAt: string;
-};
-export type { Account, Request, Allocation, Approval, OTP, Resource, User };
+
+export type { User, IJob, IJobDetail };

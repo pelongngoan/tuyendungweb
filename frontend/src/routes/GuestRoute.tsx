@@ -6,6 +6,7 @@ type Props = { children: React.ReactNode };
 
 const GuestRoute = ({ children }: Props) => {
   const { isLoggedIn } = useAuth();
+  console.log(isLoggedIn);
 
   return isLoggedIn() ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };

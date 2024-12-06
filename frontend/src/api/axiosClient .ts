@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "/", // Add your server base URL
+  baseURL: "/",
   withCredentials: true,
   headers: {
     "content-type": "application/json",
@@ -9,9 +9,14 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  // const accessToken = localStorage.getItem("accessToken");
+  // if (accessToken) {
+  //   config.headers.Authorization = `${accessToken}`;
+  // }
   const accessToken = localStorage.getItem("accessToken");
+  console.log("Access Token:", accessToken);
   if (accessToken) {
-    config.headers.Authorization = `${accessToken}`;
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
   return config;

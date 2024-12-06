@@ -4,6 +4,19 @@ import bcrypt from "bcryptjs";
 import JWT from "jsonwebtoken";
 
 // Define the interface for the user document
+export enum MAYJOR {
+  England = "England",
+  Arab = "Arab",
+  China = "China",
+  France = "France",
+  Germany = "Germany",
+  Japan = "Japan",
+  Korea = "Korea",
+  Russia = "Russia",
+  Economy = "Economy",
+  Tradition = "Tradition",
+}
+
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
@@ -11,11 +24,7 @@ export interface IUser extends Document {
   password: string;
   accountType: string;
   contact?: string;
-  location?: string;
-  profileUrl?: string;
-  cvUrl?: string;
-  jobTitle?: string;
-  about?: string;
+  mayjor?: MAYJOR;
   comparePassword(userPassword: string): Promise<boolean>;
   createJWT(): string;
 }
@@ -45,11 +54,10 @@ const userSchema = new Schema<IUser>(
     },
     accountType: { type: String, default: "seeker" },
     contact: { type: String },
-    location: { type: String },
-    profileUrl: { type: String },
-    cvUrl: { type: String },
-    jobTitle: { type: String },
-    about: { type: String },
+    mayjor: {
+      type: String,
+      enum: Object.values(MAYJOR), // Use enum values here
+    },
   },
   { timestamps: true }
 );
