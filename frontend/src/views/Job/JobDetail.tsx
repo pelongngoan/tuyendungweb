@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Chip, Divider } from "@mui/material";
+import { Box, Typography, Chip } from "@mui/material";
 
 interface JobDetailProps {
   title?: string;
@@ -49,7 +49,7 @@ const JobDetail: React.FC<JobDetailProps> = ({
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           Chi tiết công việc
         </Typography>
-        {description.map((detail, index) => (
+        {description?.map((detail, index) => (
           <Typography key={index} variant="body1" paragraph>
             {detail}
           </Typography>
@@ -69,7 +69,7 @@ const JobDetail: React.FC<JobDetailProps> = ({
           Kỹ năng
         </Typography>
         <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-          {skills.map((skill, index) => (
+          {skills?.map((skill, index) => (
             <Chip key={index} label={skill} color="primary" />
           ))}
         </Box>

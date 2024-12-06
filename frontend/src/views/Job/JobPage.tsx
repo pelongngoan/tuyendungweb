@@ -32,7 +32,6 @@ interface Job {
 
 const JobPage: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("Newest");
   const [page, setPage] = useState(1);
@@ -43,7 +42,6 @@ const JobPage: React.FC = () => {
 
   // Fetch job posts
   const fetchJobs = async () => {
-    setLoading(true);
     try {
       const response = await axios.get(`/api/jobs`, {
         params: { search, sort, page, limit: 5 },
@@ -52,14 +50,10 @@ const JobPage: React.FC = () => {
       setTotalPages(response.data.numOfPage);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchJobs();
-  }, [search, sort, page]);
+  useEffect(() => {}, []);
 
   // Handle Job Form Submission
   const handleFormSubmit = async (job: Job) => {
