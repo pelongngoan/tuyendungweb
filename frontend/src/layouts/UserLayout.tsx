@@ -7,7 +7,6 @@ const UserLayout = () => {
   const navigate = useNavigate();
 
   const handleNavigation = (destination: string) => {
-    // Generalized navigation logic
     navigate(`/${destination}`);
   };
 
@@ -19,10 +18,7 @@ const UserLayout = () => {
         minHeight: "100vh",
       }}
     >
-      {/* Header */}
       <Header title="My App" onNavigate={handleNavigation} />
-
-      {/* Content Area */}
       <Box
         component="main"
         sx={{
@@ -33,7 +29,6 @@ const UserLayout = () => {
       >
         <Outlet />
       </Box>
-
       <Footer footerText="© 2024 My App" onNavigate={handleNavigation} />
     </Box>
   );

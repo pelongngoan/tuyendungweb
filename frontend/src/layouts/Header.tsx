@@ -70,7 +70,6 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
           padding: "0 2rem",
         }}
       >
-        {/* Logo or Title */}
         <Box
           sx={{
             display: "flex",
@@ -87,12 +86,11 @@ export const Header = ({ onNavigate, logo }: HeaderProps) => {
               component="img"
               src={"../assets/logo.jpg"}
               alt="Logo"
-              sx={{ width: 50, height: 50 }} // Adjust dimensions as needed
+              sx={{ width: 50, height: 50 }}
             />
           )}
         </Box>
 
-        {/* Navigation Links */}
         {!isMobile ? (
           <Box sx={{ display: "flex", gap: "2rem" }}>
             {navigation().map((nav, index) =>

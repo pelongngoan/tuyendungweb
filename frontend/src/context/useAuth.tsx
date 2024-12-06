@@ -7,86 +7,116 @@ import {
   UserContextType,
   UserDataType,
 } from "./types";
+import authApi from "../api/auth";
 
 const defaultProvider: UserContextType = {
   user: null,
   loading: true,
   setUser: () => null,
-  setLoading: () => Boolean,
+  setLoading: () => false,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   token: null,
   registerUser: () => Promise.resolve(),
-  isLoggedIn: function (): boolean {
-    throw new Error("Function not implemented.");
-  },
+  isLoggedIn: () => false,
 };
+
 type Props = { children: React.ReactNode };
-const UserContext = createContext(defaultProvider);
+
+const UserContext = createContext<UserContextType>(defaultProvider);
+
 export const UserProvider = ({ children }: Props) => {
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<UserDataType | null>(defaultProvider.user);
-  const [isReady, setIsReady] = useState(false);
-  const [loading, setLoading] = useState<boolean>(defaultProvider.loading);
+  const [user, setUser] = useState<UserDataType | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-    if (user && token) {
-      setUser(JSON.parse(user));
-      setToken(token);
+    // Retrieve user and token from localStorage on mount
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
     }
-    setIsReady(true);
-    console.log(user);
+    setLoading(false);
   }, []);
 
-  const handleLogin = (
+  const handleLogin = async (
     params: LoginParams,
     errorCallback?: ErrCallbackType
-  ) => {};
+  ) => {
+    try {
+      const response = await authApi.login(params);
+      setUser(response.user);
+      setToken(response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("token", response.token);
 
-  const handleRegister = (
+      navigate("/home");
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("Login failed:", err.message);
+        errorCallback?.({ message: err.message });
+      } else {
+        console.error("An unexpected error occurred:", err);
+        errorCallback?.({ message: "An unexpected error occurred." });
+      }
+    }
+  };
+
+  const handleRegister = async (
     params: RegisterParams,
     errorCallback?: ErrCallbackType
-  ) => {};
+  ) => {
+    try {
+      const response = await authApi.register(params);
 
-  const isLoggedIn = () => {
-    return !!user;
+      // Assuming registration is successful and redirects to login
+      console.log("Registration successful:", response.data);
+      navigate("/login");
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("Registration failed:", err.message);
+        errorCallback?.({ message: err.message });
+      } else {
+        console.error("An unexpected error occurred:", err);
+        errorCallback?.({ message: "An unexpected error occurred." });
+      }
+    }
   };
+
+  const isLoggedIn = () => !!token;
 
   const handleLogout = () => {
     setUser(null);
-    window.localStorage.removeItem("userData");
-    window.localStorage.removeItem("storageTokenKeyName");
+    setToken(null);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
     navigate("/login");
   };
-  const values = {
-    isLoggedIn: isLoggedIn,
-    registerUser: handleRegister,
+
+  const values: UserContextType = {
     user,
     token,
     loading,
     setUser,
     setLoading,
     login: handleLogin,
+    registerUser: handleRegister,
     logout: handleLogout,
-  };
-  const generateDummyToken = (username: string): string => {
-    const payload = {
-      username: username,
-      issuedAt: new Date().toISOString(),
-      expiry: new Date(Date.now() + 3600 * 1000).toISOString(), // 1-hour expiry
-    };
-
-    // Convert payload to a Base64-encoded string
-    return btoa(JSON.stringify(payload));
+    isLoggedIn,
   };
 
   return (
     <UserContext.Provider value={values}>
-      {isReady ? children : null}
+      {!loading ? children : <div>Loading...</div>}
     </UserContext.Provider>
   );
 };
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => React.useContext(UserContext);
