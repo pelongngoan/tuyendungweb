@@ -1,37 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, CircularProgress, Typography } from "@mui/material";
 import { useParams } from "react-router-dom"; // Import useParams to access URL params
-import jobApi from "../../api/job";
-import { JobPost } from "../../api/types";
-import JobCard from "./JobCard";
+import { InternshipPost } from "../../api/types";
+import internshipApi from "../../api/internshipApi";
+import InternshipCard from "./InternshipCard";
 
-const Job: React.FC = () => {
+const Internship: React.FC = () => {
   const { major } = useParams();
-  const [jobs, setJobs] = useState<JobPost[]>([]);
+  const [internships, setInternships] = useState<InternshipPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchInternships = async () => {
       setLoading(true);
       try {
         if (major) {
-          const fetchedJobs = await jobApi.getJobsByMajor(major); // Fetch jobs by major from API
-          setJobs(fetchedJobs);
+          const fetchedInternships = await internshipApi.getInternshipsByMajor(
+            major
+          ); // Fetch internships by major from API
+          setInternships(fetchedInternships);
         } else {
-          const fetchedJobs = await jobApi.getAllJobPosts(); // Fetch all jobs if no major is provided
-          setJobs(fetchedJobs);
+          const fetchedInternships =
+            await internshipApi.getAllInternshipPosts(); // Fetch all internships if no major is provided
+          setInternships(fetchedInternships);
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        setError("Error fetching job posts");
+        setError("Error fetching internship posts");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJobs();
-  }, [major]); // Fetch jobs whenever the major URL parameter changes
+    fetchInternships();
+  }, [major]); // Fetch internships whenever the major URL parameter changes
 
   if (loading) {
     return (
@@ -54,16 +57,16 @@ const Job: React.FC = () => {
   return (
     <Box sx={{ padding: "32px" }}>
       <Grid container spacing={2}>
-        {jobs.length === 0 ? (
+        {internships.length === 0 ? (
           <Grid item xs={12}>
             <Typography variant="h6" color="textSecondary">
               Chưa có thông tin tuyển dụng
             </Typography>
           </Grid>
         ) : (
-          jobs.map((job, index) => (
+          internships.map((internship, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
-              <JobCard jobPostDetail={job} />
+              <InternshipCard internshipPostDetail={internship} />
             </Grid>
           ))
         )}
@@ -72,4 +75,4 @@ const Job: React.FC = () => {
   );
 };
 
-export default Job;
+export default Internship;

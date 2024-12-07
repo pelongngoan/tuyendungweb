@@ -2,10 +2,6 @@ enum ROLE {
   ADMIN = "ADMIN",
   USER = "USER",
 }
-enum STATE {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-}
 enum MAYJOR {
   England = "England",
   Arab = "Arab",
@@ -18,5 +14,16 @@ enum MAYJOR {
   Economy = "Economy",
   Tradition = "Tradition",
 }
-
-export { ROLE, STATE, MAYJOR };
+export const MAYJOR_TRANSLATION = {
+  [MAYJOR.England]: "Anh",
+  [MAYJOR.Arab]: "Ả Rập",
+  [MAYJOR.China]: "Trung Quốc",
+  [MAYJOR.France]: "Pháp",
+  [MAYJOR.Germany]: "Đức",
+  [MAYJOR.Japan]: "Nhật Bản",
+  [MAYJOR.Korea]: "Hàn Quốc",
+  [MAYJOR.Russia]: "Nga",
+  [MAYJOR.Economy]: "Kinh tế",
+  [MAYJOR.Tradition]: "Truyền thống",
+};
+export { ROLE, MAYJOR };

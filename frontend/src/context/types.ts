@@ -1,42 +1,53 @@
-export type ErrCallbackType = (err: { [key: string]: string }) => void;
+// types.ts or a similar file
 
-export type LoginParams = {
-  email: string;
-  password: string;
-  rememberMe?: boolean;
-};
-export type RegisterParams = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
-export type UserDataType = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  accountType: string;
-  contact?: string;
+export interface UserDataType {
+  id: string;
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
   location?: string;
-  profileUrl?: string;
-  cvUrl?: string;
-  jobTitle?: string;
-  about?: string;
-};
+  major?: string;
+  phone?: string;
+  role?: string;
+}
 
-export type UserContextType = {
-  loading: boolean;
-  setLoading: (value: boolean) => void;
+export interface UserContextType {
   user: UserDataType | null;
-  setUser: (value: UserDataType | null) => void;
-  logout: () => void;
-  login: (params: LoginParams, errorCallback?: ErrCallbackType) => void;
   token: string | null;
+  loading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<UserDataType | null>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  login: (
+    params: LoginParams,
+    errorCallback?: ErrCallbackType
+  ) => Promise<void>;
   registerUser: (
     params: RegisterParams,
     errorCallback?: ErrCallbackType
-  ) => void;
+  ) => Promise<void>;
+  logout: () => void;
   isLoggedIn: () => boolean;
-};
+}
+
+export interface LoginParams {
+  email: string;
+  password: string;
+}
+
+export interface RegisterParams {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  location?: string;
+  major?: string;
+  phone?: string;
+  role?: string;
+}
+
+export interface ErrCallbackType {
+  (error: { message: string }): void;
+}

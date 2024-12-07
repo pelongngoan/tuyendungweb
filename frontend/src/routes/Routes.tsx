@@ -14,6 +14,8 @@ import GuestRoute from "./GuestRoute";
 import Dashboard from "../views/Dashboard/Dashboard";
 import JobDetail from "../views/Job/JobDetail";
 import { Profile } from "../views/Profile/Profile";
+import JobApplicationForm from "../views/Job/JobApplicationForm";
+import Internship from "../views/Internship/Internship";
 
 export const router = createBrowserRouter([
   {
@@ -58,7 +60,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "job",
+        path: "job/:major",
         element: (
           <ProtectedRoute>
             <Job />
@@ -108,14 +110,26 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "/jobDetail",
-        element: <JobDetail />,
+        path: "/jobDetail/:id",
+        element: (
+          <ProtectedRoute>
+            <JobDetail />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "company",
         element: (
           <ProtectedRoute>
             <Company />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "internship",
+        element: (
+          <ProtectedRoute>
+            <Internship />
           </ProtectedRoute>
         ),
       },
@@ -132,6 +146,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <About />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "createJob",
+        element: (
+          <ProtectedRoute>
+            <JobApplicationForm />
           </ProtectedRoute>
         ),
       },

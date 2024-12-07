@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Chip, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom"; // Import useParams to get the URL params
-import jobApi from "../../api/job"; // Adjust the path to your job API
-import { JobPost } from "../../api/types";
+import { InternshipPost } from "../../api/types";
 import { MAYJOR_TRANSLATION } from "../../api/enum";
+import internshipApi from "../../api/internshipApi";
 
-const JobDetail = () => {
-  const { id } = useParams<{ id: string }>(); // Get jobId from URL
-  const [jobPost, setJobPost] = useState<JobPost | null>(null);
+const InternshipDetail = () => {
+  const { id } = useParams<{ id: string }>(); // Get internshipId from URL
+  const [internshipPost, setInternshipPost] = useState<InternshipPost | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchJobPost = async () => {
+    const fetchInternshipPost = async () => {
       if (id) {
         try {
-          const data = await jobApi.getJobById(id); // Fetch job details by ID
+          const data = await internshipApi.getInternshipById(id); // Fetch internship details by ID
           console.log(data);
 
           if (data) {
-            setJobPost(data);
+            setInternshipPost(data);
           } else {
-            setError("Job post not found");
+            setError("Internship post not found");
           }
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
-          setError("Error fetching job post");
+          setError("Error fetching internship post");
         } finally {
           setLoading(false);
         }
@@ -33,7 +35,7 @@ const JobDetail = () => {
     };
 
     if (id) {
-      fetchJobPost();
+      fetchInternshipPost();
     }
   }, [id]);
 
@@ -55,7 +57,7 @@ const JobDetail = () => {
     );
   }
 
-  if (!jobPost) {
+  if (!internshipPost) {
     return (
       <Box sx={{ textAlign: "center", marginTop: "20px" }}>
         <Typography variant="h6">Chưa có thông tin chi tiết</Typography>
@@ -85,16 +87,10 @@ const JobDetail = () => {
         }}
       >
         <Typography variant="h5" fontWeight="bold" sx={{ marginBottom: "8px" }}>
-          {jobPost.title}
+          {internshipPost.title}
         </Typography>
         <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Công ty:</strong> {jobPost.company}
-        </Typography>
-        <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Lương:</strong> {jobPost.salary}
-        </Typography>
-        <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Địa điểm:</strong> {jobPost.location}
+          <strong>Công ty:</strong> {internshipPost.company}
         </Typography>
       </Box>
 
@@ -110,7 +106,7 @@ const JobDetail = () => {
         </Typography>
         <div
           dangerouslySetInnerHTML={{
-            __html: jobPost.description,
+            __html: internshipPost.description,
           }}
           style={{ textAlign: "left" }} // Ensures that the description content aligns left
         />
@@ -128,27 +124,9 @@ const JobDetail = () => {
         </Typography>
         <div
           dangerouslySetInnerHTML={{
-            __html: jobPost.requirements,
+            __html: internshipPost.requirements,
           }}
           style={{ textAlign: "left" }} // Aligns the requirements content to the left
-        />
-      </Box>
-
-      {/* Benefit Section */}
-      <Box sx={{ padding: "16px" }}>
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          gutterBottom
-          textAlign="left"
-        >
-          Phúc lợi
-        </Typography>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: jobPost.benefit,
-          }}
-          style={{ textAlign: "left" }} // Aligns the benefits content to the left
         />
       </Box>
 
@@ -164,7 +142,7 @@ const JobDetail = () => {
         </Typography>
         <div
           dangerouslySetInnerHTML={{
-            __html: jobPost.experience || "Không yêu cầu kinh nghiệm",
+            __html: internshipPost.experience || "Không yêu cầu kinh nghiệm",
           }}
           style={{ textAlign: "left" }} // Aligns the experience content to the left
         />
@@ -180,7 +158,7 @@ const JobDetail = () => {
         >
           Chuyên ngành tuyển dụng
         </Typography>
-        {jobPost.mayjor.map((major, index) => (
+        {internshipPost.mayjor.map((major, index) => (
           <Chip
             key={index}
             label={MAYJOR_TRANSLATION[major]}
@@ -199,7 +177,7 @@ const JobDetail = () => {
         >
           Thông tin khác
         </Typography>
-        {jobPost.other.map((item, index) => (
+        {internshipPost.other.map((item, index) => (
           <Box key={index} sx={{ marginBottom: "16px" }}>
             <Typography variant="body1" fontWeight="bold" textAlign="left">
               {item.label}
@@ -217,4 +195,4 @@ const JobDetail = () => {
   );
 };
 
-export default JobDetail;
+export default InternshipDetail;

@@ -219,7 +219,6 @@ export const Header = ({
                   {user.firstName}
                 </Typography>
                 <Avatar
-                  src={user.profileUrl || ""}
                   alt={user.firstName}
                   sx={{ width: 32, height: 32, cursor: "pointer" }}
                 />

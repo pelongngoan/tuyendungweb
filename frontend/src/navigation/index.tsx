@@ -27,7 +27,7 @@ export const navigation = (): NavItem[] => [
     children: [
       {
         title: "Tiếng Anh",
-        path: "job/english",
+        path: "job/England",
         icon: (
           <img
             src={England}
@@ -38,7 +38,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Văn hóa và truyền thông xuyên quốc gia",
-        path: "job/tradition",
+        path: "job/Tradition",
         icon: (
           <img
             src={Tradition}
@@ -49,7 +49,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Hàn",
-        path: "job/korean",
+        path: "job/Korea",
         icon: (
           <img
             src={Korea}
@@ -60,7 +60,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Nhật",
-        path: "job/japanese",
+        path: "job/Japan",
         icon: (
           <img
             src={Japan}
@@ -71,7 +71,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Nga",
-        path: "job/russia",
+        path: "job/Russia",
         icon: (
           <img
             src={Russia}
@@ -82,7 +82,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Trung",
-        path: "job/chinese",
+        path: "job/China",
         icon: (
           <img
             src={China}
@@ -93,7 +93,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Ả Rập",
-        path: "job/arap",
+        path: "job/Arab",
         icon: (
           <img
             src={Arab}
@@ -104,7 +104,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Kinh tế - Tài chính",
-        path: "job/economy",
+        path: "job/Economy",
         icon: (
           <img
             src={Economy}
@@ -115,7 +115,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Đức",
-        path: "job/german",
+        path: "job/Germany",
         icon: (
           <img
             src={Germany}
@@ -126,7 +126,7 @@ export const navigation = (): NavItem[] => [
       },
       {
         title: "Pháp",
-        path: "job/french",
+        path: "job/France",
         icon: (
           <img
             src={France}

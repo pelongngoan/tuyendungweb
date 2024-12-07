@@ -1,31 +1,68 @@
 import { MAYJOR } from "./enum";
 
-type User = {
-  firstName: string;
-  lastName: string;
+export interface RegisterParams {
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  location?: string;
+  major?: string;
+  phone?: string;
+  role?: string;
+}
+
+export interface LoginParams {
   email: string;
-  accountType: string;
-  contact?: string;
-  mayjor?: MAYJOR | undefined;
-};
-type IJobDetail = {
-  desc: string;
-  requirements: string;
-};
-
-type IJob = {
-  _id: string; // ID of the job (MongoDB ObjectId)
-  company: string; // ID of the company (MongoDB ObjectId or string reference)
-  jobTitle: string;
-  jobType: string;
+  password: string;
+}
+export interface JobPost {
+  id: string;
+  company: string;
+  title: string;
   location: string;
-  salary: number;
-  vacancies?: number; // Optional field
-  experience: number;
-  detail: IJobDetail[]; // Array of job detail objects
-  application: string[]; // Array of user IDs (MongoDB ObjectIds or strings)
-  createdAt?: string; // Optional timestamps (added by Mongoose)
-  updatedAt?: string; // Optional timestamps (added by Mongoose)
-};
+  salary: string;
+  description: string;
+  requirements: string;
+  benefit: string;
+  experience: string;
+  mayjor: MAYJOR[];
+  other: { label: string; content: string }[];
+}
 
-export type { User, IJob, IJobDetail };
+export type JobPostDetail = {
+  id: string;
+  title: string;
+  company: string;
+  description: string;
+  salary: string;
+  experience: string;
+  location: string;
+  createdAt: string;
+  position: string;
+  phone: string;
+  workingTime: string;
+  requirements: string;
+  advantages: string;
+};
+export type IntershipPostDetail = {
+  id: string;
+  company: string;
+  title: string;
+  description: string;
+  requirements: string;
+  experience: string;
+  mayjor: MAYJOR[];
+  createdAt: string;
+};
+export interface InternshipPost {
+  id: string;
+
+  company: string;
+  title: string;
+  description: string;
+  requirements: string;
+  experience: string;
+  mayjor: MAYJOR[];
+  other: { label: string; content: string }[];
+}

@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api-v1": {
-        target: "https://tuyendungweb.vercel.app/",
+        target: "https://testserver-delta.vercel.app",
         changeOrigin: true,
       },
     },

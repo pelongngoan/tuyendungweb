@@ -8,74 +8,54 @@ import {
   Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-interface JobCardProps {
-  companyName: string;
-  location: string;
-  salary: string;
-  positions: number;
-  lastActivity: string;
-  logo: string; // Assuming logo URL is passed
-  jobTitle: string;
+import Logo from "../../assets/logo.jpg";
+import { InternshipPost } from "../../api/types";
+
+interface InternshipCardProps {
+  internshipPostDetail: InternshipPost;
 }
 
-const JobCard: React.FC<JobCardProps> = ({
-  companyName,
-  location,
-  salary,
-  positions,
-  lastActivity,
-  logo,
-  jobTitle,
+const InternshipCard: React.FC<InternshipCardProps> = ({
+  internshipPostDetail,
 }) => {
   const navigate = useNavigate();
 
-  const handleNavigation = () => {
-    navigate("/jobDetail/");
+  const handleNavigation = (id: string) => {
+    navigate(`/internshipDetail/${id}`);
   };
+
   return (
     <Card
       sx={{
         width: "100%",
         margin: "16px",
         borderRadius: "8px",
-        border: "1px solid #2196f3",
+        border: "1px solid #2196f3", // Blue border
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
       }}
     >
       <CardContent>
-        {/* Company Logo */}
+        {/* Company Logo and Title */}
         <Box display="flex" alignItems="center" mb={2}>
           <img
-            src={logo}
-            alt={companyName}
+            src={Logo} // Using dynamic logo or default
+            alt={internshipPostDetail.company}
             style={{ width: 50, height: 50, marginRight: 16 }}
           />
           <Typography variant="h6" fontWeight="bold" noWrap>
-            {companyName}
+            {internshipPostDetail.company}
           </Typography>
         </Box>
 
-        {/* Job Title */}
+        {/* Internship Title */}
         <Typography variant="h6" fontWeight="bold" mb={1}>
-          {jobTitle}
+          {internshipPostDetail.title}
         </Typography>
-
-        {/* Job Details */}
-        <Box mb={2}>
-          <Typography variant="body2" color="text.secondary">
-            {location}
-          </Typography>
-          <Typography variant="body2" color="primary" fontWeight="bold">
-            {salary}
-          </Typography>
-        </Box>
 
         {/* Positions and Last Activity */}
         <Box display="flex" justifyContent="space-between" mb={2}>
           <Typography variant="body2" color="text.secondary">
-            <strong>{positions}</strong> vị trí đang tuyển
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Còn {lastActivity}
+            {/* Còn {internshipPostDetail.createdAt} ngày */}
           </Typography>
         </Box>
 
@@ -85,8 +65,16 @@ const JobCard: React.FC<JobCardProps> = ({
         {/* View Details Button */}
         <Button
           variant="outlined"
-          sx={{ width: "100%" }}
-          onClick={handleNavigation}
+          sx={{
+            width: "100%",
+            borderColor: "#2196f3", // Border color for the button
+            color: "#2196f3", // Text color for the button
+            ":hover": {
+              backgroundColor: "#2196f3",
+              color: "#fff",
+            },
+          }}
+          onClick={() => handleNavigation(internshipPostDetail.id)}
         >
           Xem chi tiết
         </Button>
@@ -95,4 +83,4 @@ const JobCard: React.FC<JobCardProps> = ({
   );
 };
 
-export default JobCard;
+export default InternshipCard;

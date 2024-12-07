@@ -34,10 +34,8 @@ export const UserProvider = ({ children }: Props) => {
   useEffect(() => {
     // Retrieve user and token from localStorage on mount
     const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("accessToken");
-    if (storedUser && storedToken) {
+    if (storedUser) {
       setUser(JSON.parse(storedUser));
-      setToken(storedToken);
     }
     setLoading(false);
   }, []);
@@ -49,12 +47,7 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const response = await authApi.login(params);
       setUser(response.user);
-      setToken(response.token);
       localStorage.setItem("user", JSON.stringify(response.user));
-      localStorage.setItem("accessToken", response.token); // Ensure it's being set
-
-      console.log("Token saved in localStorage:", response.token); // Log token
-
       navigate("/home");
     } catch (err) {
       if (err instanceof Error) {
@@ -73,9 +66,8 @@ export const UserProvider = ({ children }: Props) => {
   ) => {
     try {
       const response = await authApi.register(params);
-
       // Assuming registration is successful and redirects to login
-      console.log("Registration successful:", response.data);
+      console.log("Registration successful:", response?.message);
       navigate("/login");
     } catch (err) {
       if (err instanceof Error) {
