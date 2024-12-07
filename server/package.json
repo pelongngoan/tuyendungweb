@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node public/index.js",
+    "start": "node src/index.ts",
     "vercel-build": "npm run build"
   },
   "keywords": [],
