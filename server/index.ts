@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
-import dbConnection from "./src/config/config";
-import errorMiddleware from "./src/middlewares/error";
-import router from "./src/routes";
+import dbConnection from "config/config";
+import router from "routes";
+import errorMiddleware from "middlewares/error";
 
 dotenv.config();
 const app = express();
