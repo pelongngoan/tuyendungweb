@@ -6,10 +6,8 @@ import cors from "cors";
 import dbConnection from "./config/config";
 import errorMiddleware from "./middlewares/error";
 import router from "./routes";
-import path from "path";
 
 dotenv.config();
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
 const app = express();
 
 const PORT = process.env.PORT || 8800;
