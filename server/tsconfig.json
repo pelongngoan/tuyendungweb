@@ -8,5 +8,13 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "index.ts"]
+  "include": [
+    "src/**/*",
+    "index.ts",
+    "config",
+    "controllers",
+    "middlewares",
+    "routes",
+    "models"
+  ]
 }

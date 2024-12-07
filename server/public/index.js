@@ -8,9 +8,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const cors_1 = __importDefault(require("cors"));
-const config_1 = __importDefault(require("./src/config/config"));
-const error_1 = __importDefault(require("./src/middlewares/error"));
-const routes_1 = __importDefault(require("./src/routes"));
+const config_1 = __importDefault(require("./config/config"));
+const error_1 = __importDefault(require("./middlewares/error"));
+const routes_1 = __importDefault(require("./routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8800;
@@ -26,9 +26,6 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(routes_1.default);
 //error middleware
 app.use(error_1.default);
-app.get("/", (req, res) => {
-    res.json({ message: "Hello from API" });
-});
 app.listen(PORT, () => {
     console.log(`Dev Server running on port: ${PORT}`);
 });
