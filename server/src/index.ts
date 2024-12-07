@@ -2,10 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import mongoSanitize from "express-mongo-sanitize";
-import dbConnection from "./src/config/config";
-import router from "./src/routes";
-import errorMiddleware from "./src/middlewares/error";
 import cors from "cors";
+import dbConnection from "./config/config";
+import errorMiddleware from "./middlewares/error";
+import router from "./routes";
 dotenv.config();
 
 const app = express();
