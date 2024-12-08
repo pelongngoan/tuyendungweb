@@ -139,14 +139,14 @@ export const navigation = (): NavItem[] => [
   {
     title: "Chương trình thực tập",
     path: "internship",
-    // children: [
-    //   { title: "Tech Companies", path: "company/tech", icon: <BusinessIcon /> },
-    //   {
-    //     title: "Finance Companies",
-    //     path: "company/finance",
-    //     icon: <BusinessIcon />,
-    //   },
-    // ],
+  },
+  {
+    title: "Tạo hồ sơ công việc",
+    path: "createJob",
+  },
+  {
+    title: "Tạo hồ sơ thực tập",
+    path: "internshipCreate",
   },
   {
     title: "About",

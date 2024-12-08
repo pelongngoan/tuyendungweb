@@ -93,7 +93,7 @@ const InternshipApplicationForm = () => {
         }}
       >
         <Typography variant="h4" gutterBottom align="center" sx={{ mb: 2 }}>
-          Form điền hồ sơ công việc
+          Form điền hồ sơ thực tập
         </Typography>
         <form onSubmit={handleSubmit}>
           {/* Basic Info Row */}
