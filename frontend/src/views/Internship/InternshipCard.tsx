@@ -21,6 +21,8 @@ const InternshipCard: React.FC<InternshipCardProps> = ({
   const navigate = useNavigate();
 
   const handleNavigation = (id: string) => {
+    console.log("Sssss" + id);
+
     navigate(`/internshipDetail/${id}`);
   };
 

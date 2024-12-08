@@ -60,11 +60,23 @@ const internshipApi = {
     try {
       const querySnapshot = await getDocs(internshipPostsColRef);
       const internshipPosts: InternshipPost[] = querySnapshot.docs.map(
-        (doc) =>
-          ({
+        (doc) => {
+          const data = doc.data();
+          return {
             id: doc.id,
-            ...doc.data(),
-          } as unknown as InternshipPost)
+            company: data.company || "",
+            title: data.title || "",
+            location: data.location || "",
+            salary: data.salary || "",
+            description: data.description || "",
+            requirements: data.requirements || "",
+            benefit: data.benefit || "",
+            experience: data.experience || "",
+            mayjor: data.mayjor || [],
+            other: data.other || [],
+            createdAt: data.createAt || "",
+          };
+        }
       );
       return internshipPosts;
     } catch (error) {

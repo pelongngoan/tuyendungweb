@@ -15,16 +15,10 @@ const Internship: React.FC = () => {
     const fetchInternships = async () => {
       setLoading(true);
       try {
-        if (major) {
-          const fetchedInternships = await internshipApi.getInternshipsByMajor(
-            major
-          ); // Fetch internships by major from API
-          setInternships(fetchedInternships);
-        } else {
-          const fetchedInternships =
-            await internshipApi.getAllInternshipPosts(); // Fetch all internships if no major is provided
-          setInternships(fetchedInternships);
-        }
+        const fetchedInternships = await internshipApi.getAllInternshipPosts(); // Fetch all internships if no major is provided
+        setInternships(fetchedInternships);
+        console.log(fetchedInternships);
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setError("Error fetching internship posts");
