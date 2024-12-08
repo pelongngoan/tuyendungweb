@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -88,6 +88,7 @@ export const Profile = () => {
       await authApi.updateUser(user?.id, userData); // Call API to update user data
       setMessage("Cập nhật thông tin người dùng thành công!"); // Success message
       setEditableField(null); // Exit editing mode after successful update
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setMessage("Error updating user data"); // Error message
     }
