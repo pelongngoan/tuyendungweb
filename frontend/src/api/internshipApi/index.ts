@@ -41,6 +41,7 @@ const internshipApi = {
             experience: data.experience || "",
             mayjor: data.mayjor || [],
             other: data.other || [],
+            createdAt: data.createAt || "",
           };
         }
       );
