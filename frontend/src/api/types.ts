@@ -1,3 +1,4 @@
+import { FieldValue } from "firebase/firestore";
 import { MAYJOR } from "./enum";
 
 export interface RegisterParams {
@@ -27,6 +28,7 @@ export interface JobPost {
   benefit: string;
   experience: string;
   mayjor: MAYJOR[];
+  createdAt: FieldValue;
   other: { label: string; content: string }[];
 }
 
@@ -57,7 +59,6 @@ export type IntershipPostDetail = {
 };
 export interface InternshipPost {
   id: string;
-
   company: string;
   title: string;
   description: string;
@@ -65,4 +66,5 @@ export interface InternshipPost {
   experience: string;
   mayjor: MAYJOR[];
   other: { label: string; content: string }[];
+  createdAt: FieldValue;
 }

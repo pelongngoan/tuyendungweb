@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../db/firebaseConfig";
-import { JobPost } from "../types"; // Assuming you have a type for job posts
+import { JobPost } from "../types";
 
 const jobPostsColRef = collection(db, "jobs");
 
@@ -37,6 +37,7 @@ const jobApi = {
           experience: data.experience || "",
           mayjor: data.mayjor || [],
           other: data.other || [],
+          createdAt: data.createAt || "",
         };
       });
 
@@ -53,10 +54,23 @@ const jobApi = {
   getAllJobPosts: async (): Promise<JobPost[]> => {
     try {
       const querySnapshot = await getDocs(jobPostsColRef);
-      const jobPosts: JobPost[] = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // Add the job post data
-      }));
+      const jobPosts: JobPost[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          company: data.company || "", // Default value
+          title: data.title || "",
+          location: data.location || "",
+          salary: data.salary || "",
+          description: data.description || "",
+          requirements: data.requirements || "",
+          benefit: data.benefit || "",
+          experience: data.experience || "",
+          mayjor: data.mayjor || [],
+          other: data.other || [],
+          createdAt: data.createdAt || "",
+        };
+      });
       return jobPosts;
     } catch (error) {
       console.error("Error fetching all job posts:", error);

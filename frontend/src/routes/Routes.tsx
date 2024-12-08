@@ -16,6 +16,7 @@ import JobDetail from "../views/Job/JobDetail";
 import { Profile } from "../views/Profile/Profile";
 import JobApplicationForm from "../views/Job/JobApplicationForm";
 import Internship from "../views/Internship/Internship";
+import InternshipApplicationForm from "../views/Internship/InternshipApplicationForm";
 
 export const router = createBrowserRouter([
   {
@@ -130,6 +131,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Internship />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "internshipCreate",
+        element: (
+          <ProtectedRoute>
+            <InternshipApplicationForm />
           </ProtectedRoute>
         ),
       },

@@ -40,6 +40,8 @@ export const Header = ({
   const [avatarMenuAnchor, setAvatarMenuAnchor] = useState<null | HTMLElement>(
     null
   );
+  console.log(anchorEl);
+  console.log(drawerOpen);
 
   const handleOpenMenu = (
     event: React.MouseEvent<HTMLElement>,

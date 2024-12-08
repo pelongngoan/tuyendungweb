@@ -59,10 +59,11 @@ const internshipApi = {
     try {
       const querySnapshot = await getDocs(internshipPostsColRef);
       const internshipPosts: InternshipPost[] = querySnapshot.docs.map(
-        (doc) => ({
-          id: doc.id,
-          ...doc.data(), // Add the internship post data
-        })
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as unknown as InternshipPost)
       );
       return internshipPosts;
     } catch (error) {

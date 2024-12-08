@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Chip, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom"; // Import useParams to get the URL params
 import jobApi from "../../api/job"; // Adjust the path to your job API

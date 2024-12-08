@@ -14,21 +14,18 @@ import {
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import jobApi from "../../api/job";
-import { JobPost } from "../../api/types";
+import { InternshipPost } from "../../api/types";
 import { MAYJOR, MAYJOR_TRANSLATION } from "../../api/enum";
+import internshipApi from "../../api/internshipApi";
 import { serverTimestamp } from "firebase/firestore";
 
-const JobApplicationForm = () => {
-  const [formData, setFormData] = useState<JobPost>({
+const InternshipApplicationForm = () => {
+  const [formData, setFormData] = useState<InternshipPost>({
     id: "",
     company: "",
     title: "",
-    location: "",
-    salary: "",
     description: "",
     requirements: "",
-    benefit: "",
     experience: "",
     mayjor: [],
     other: [],
@@ -46,7 +43,8 @@ const JobApplicationForm = () => {
       [name]: value as string[],
     }));
   };
-  const handleQuillChange = (field: keyof JobPost, value: string) => {
+
+  const handleQuillChange = (field: keyof InternshipPost, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -73,13 +71,15 @@ const JobApplicationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, createdAt, ...submitData } = formData;
-      const jobPostId = await jobApi.createJobPost(submitData as JobPost);
-      alert(`Job post created successfully with ID: ${jobPostId}`);
+      const internshipPostId = await internshipApi.createInternshipPost(
+        formData
+      );
+      alert(
+        `Internship post created successfully with ID: ${internshipPostId}`
+      );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      alert("Failed to create job post. Please try again.");
+      alert("Failed to create internship post. Please try again.");
     }
   };
 
@@ -132,40 +132,6 @@ const JobApplicationForm = () => {
               />
             </Grid>
 
-            {/* Right Side (Location & Salary) */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Địa chỉ"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                fullWidth
-                required
-                variant="outlined"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Lương"
-                name="salary"
-                value={formData.salary}
-                onChange={handleChange}
-                fullWidth
-                required
-                variant="outlined"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                  },
-                }}
-              />
-            </Grid>
-
             {/* Mayjor Select */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required variant="outlined">
@@ -174,7 +140,7 @@ const JobApplicationForm = () => {
                   label="Chuyên ngành tuyển dụng"
                   name="mayjor"
                   value={formData.mayjor}
-                  onChange={handleChangeSelect}
+                  onChange={(e) => handleChangeSelect(e)}
                   multiple
                   renderValue={(selected) => {
                     return selected
@@ -218,22 +184,6 @@ const JobApplicationForm = () => {
                 theme="snow"
                 value={formData.requirements}
                 onChange={(value) => handleQuillChange("requirements", value)}
-                style={{
-                  height: "300px",
-                  borderRadius: "8px",
-                  marginTop: "8px", // Add space between label and editor
-                }}
-              />
-            </Grid>
-            {/* Right Side (Benefit & Experience) */}
-            <Grid item xs={12} sm={6} sx={{ mt: 10 }}>
-              <Typography variant="h6" gutterBottom>
-                Quyền lợi
-              </Typography>
-              <ReactQuill
-                theme="snow"
-                value={formData.benefit}
-                onChange={(value) => handleQuillChange("benefit", value)}
                 style={{
                   height: "300px",
                   borderRadius: "8px",
@@ -332,4 +282,4 @@ const JobApplicationForm = () => {
   );
 };
 
-export default JobApplicationForm;
+export default InternshipApplicationForm;

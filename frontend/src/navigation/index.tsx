@@ -1,5 +1,4 @@
 import WorkIcon from "@mui/icons-material/Work";
-import BusinessIcon from "@mui/icons-material/Business";
 import InfoIcon from "@mui/icons-material/Info";
 import England from "../assets/england.svg";
 import Arab from "../assets/arab.svg";
@@ -139,16 +138,15 @@ export const navigation = (): NavItem[] => [
   },
   {
     title: "Chương trình thực tập",
-    path: "company",
-    icon: <BusinessIcon />,
-    children: [
-      { title: "Tech Companies", path: "company/tech", icon: <BusinessIcon /> },
-      {
-        title: "Finance Companies",
-        path: "company/finance",
-        icon: <BusinessIcon />,
-      },
-    ],
+    path: "internship",
+    // children: [
+    //   { title: "Tech Companies", path: "company/tech", icon: <BusinessIcon /> },
+    //   {
+    //     title: "Finance Companies",
+    //     path: "company/finance",
+    //     icon: <BusinessIcon />,
+    //   },
+    // ],
   },
   {
     title: "About",
