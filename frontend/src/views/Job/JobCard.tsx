@@ -84,7 +84,7 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
   };
 
   // Calculate remaining days and format dates
-  const remainingDays = dayjs(jobPostDetail.expireDate).diff(dayjs(), "day");
+  // const remainingDays = dayjs(jobPostDetail.expireDate).diff(dayjs(), "day");
 
   return (
     <>
@@ -153,11 +153,9 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
           </Box>
 
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography
-              variant="body2"
-              color={remainingDays > 0 ? "green" : "red"}
-            >
-              {remainingDays > 0 ? `Còn ${remainingDays} ngày` : "Đã hết hạn"}
+            <Typography variant="body2" color={"green"}>
+              {"Còn thời gian ứng tuyển"}
+              {/* {remainingDays > 0 ? `Còn ${remainingDays} ngày` : "Đã hết hạn"} */}
             </Typography>
           </Box>
 
