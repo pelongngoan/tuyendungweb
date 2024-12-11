@@ -207,6 +207,58 @@ const authApi = {
       throw error;
     }
   },
+  updateUserAppliedInterns: async (
+    userId: string | undefined,
+    internId: string
+  ) => {
+    try {
+      if (!userId) {
+        return;
+      }
+
+      // Fetch the current user's document
+      const userRef = doc(db, "user", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const appliedInterns = userData?.appliedInterns || [];
+
+        // If the intern is not already applied, add it to the array
+        if (!appliedInterns.includes(internId)) {
+          appliedInterns.push(internId);
+        }
+
+        // Update the user document with the new applied intern
+        await updateDoc(userRef, {
+          appliedInterns: appliedInterns,
+        });
+
+        return { userId, appliedInterns };
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Error applying for intern:", error);
+      throw error;
+    }
+  },
+  // Get all applied interns for a user
+  getAppliedInterns: async (userId: string) => {
+    try {
+      const userDoc = await getDoc(doc(db, "user", userId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const appliedInterns = userData?.appliedInterns || [];
+        return appliedInterns;
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Error fetching applied interns:", error);
+      throw error;
+    }
+  },
 };
 
 export default authApi;

@@ -8,6 +8,8 @@ import {
   updateDoc,
   query,
   where,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../../db/firebaseConfig";
 import { InternshipPost } from "../types"; // Assuming you have a type for internship posts
@@ -148,6 +150,93 @@ const internshipApi = {
       console.log("Internship post updated with ID:", internshipId);
     } catch (error) {
       console.error("Error updating internship post:", error);
+      throw error;
+    }
+  },
+  checkInternshipStatus: async (
+    userId: string,
+    internshipId: string
+  ): Promise<boolean> => {
+    try {
+      // Reference to the user document
+      const userDocRef = doc(db, "user", userId);
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        // Check if the internshipId is in the appliedInternships array
+        return (
+          userData.appliedInternships &&
+          userData.appliedInternships.includes(internshipId)
+        );
+      } else {
+        console.log("No such user found!");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking internship application status:", error);
+      throw error;
+    }
+  },
+
+  // Apply for an internship
+  applyInternship: async (
+    userId: string,
+    internshipId: string
+  ): Promise<void> => {
+    try {
+      // Check if the user has already applied for the internship
+      const alreadyApplied = await internshipApi.checkInternshipStatus(
+        userId,
+        internshipId
+      );
+      if (alreadyApplied) {
+        throw new Error("You have already applied for this internship.");
+      }
+
+      // Reference to the user document
+      const userDocRef = doc(db, "user", userId);
+
+      // Add the internshipId to the appliedInternships array
+      await updateDoc(userDocRef, {
+        appliedInternships: arrayUnion(internshipId), // Adds the internshipId if not already present
+      });
+
+      console.log(`User ${userId} applied for internship ${internshipId}`);
+    } catch (error) {
+      console.error("Error applying for internship:", error);
+      throw error;
+    }
+  },
+
+  // Withdraw an internship application (unapply the internship)
+  unapplyInternship: async (
+    userId: string,
+    internshipId: string
+  ): Promise<void> => {
+    try {
+      // Check if the user has applied for the internship
+      const applicationStatus = await internshipApi.checkInternshipStatus(
+        userId,
+        internshipId
+      );
+      if (!applicationStatus) {
+        throw new Error("You haven't applied for this internship.");
+      }
+
+      // Reference to the user document
+      const userDocRef = doc(db, "users", userId);
+
+      // Remove the internshipId from the appliedInternships array
+      await updateDoc(userDocRef, {
+        appliedInternships: arrayRemove(internshipId), // Removes the internshipId from the array
+      });
+
+      console.log(
+        `User ${userId} withdrew their application for internship ${internshipId}`
+      );
+    } catch (error) {
+      console.error("Error withdrawing internship application:", error);
       throw error;
     }
   },

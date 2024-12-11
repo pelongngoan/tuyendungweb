@@ -67,6 +67,7 @@ export interface InternshipPost {
   requirements: string;
   experience: string;
   mayjor: MAYJOR[];
+  imageUrl: string;
   other: { label: string; content: string }[];
   createdAt: FieldValue;
 }

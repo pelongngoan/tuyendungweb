@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -18,8 +18,12 @@ import { InternshipPost } from "../../api/types";
 import { MAYJOR, MAYJOR_TRANSLATION } from "../../api/enum";
 import internshipApi from "../../api/internshipApi";
 import { serverTimestamp } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 
 const InternshipApplicationForm = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<InternshipPost>({
     id: "",
     company: "",
@@ -29,9 +33,22 @@ const InternshipApplicationForm = () => {
     experience: "",
     mayjor: [],
     other: [],
+    imageUrl: "",
     createdAt: serverTimestamp(),
   });
-
+  useEffect(() => {
+    if (id) {
+      const fetchInternBy = async () => {
+        try {
+          const fetchedIntern = await internshipApi.getInternshipById(id);
+          setFormData(fetchedIntern!);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchInternBy();
+    }
+  }, [id]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -71,15 +88,23 @@ const InternshipApplicationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const internshipPostId = await internshipApi.createInternshipPost(
-        formData
-      );
-      alert(
-        `Internship post created successfully with ID: ${internshipPostId}`
-      );
+      if (!id) {
+        console.log("first");
+
+        formData.createdAt = serverTimestamp();
+        await internshipApi.createInternshipPost(formData);
+        alert(`Tạo đơn thực tập thành công`);
+      } else {
+        console.log("ss");
+
+        await internshipApi.updateInternshipPost(id!, formData);
+        alert(`Chỉnh sửa đơn thực tập thành công`);
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      alert("Failed to create internship post. Please try again.");
+      alert("Thất bại xin hãy thử lại hoặc liên hệ Admin");
+    } finally {
+      navigate("/internship");
     }
   };
 
@@ -131,31 +156,65 @@ const InternshipApplicationForm = () => {
                 }}
               />
             </Grid>
-
-            {/* Mayjor Select */}
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required variant="outlined">
-                <InputLabel>Hệ tuyển dụng</InputLabel>
-                <Select
-                  label="Hệ tuyển dụng"
-                  name="mayjor"
-                  value={formData.mayjor}
-                  onChange={(e) => handleChangeSelect(e)}
-                  multiple
-                  renderValue={(selected) => {
-                    return selected
-                      .map((value) => MAYJOR_TRANSLATION[value] || value)
-                      .join(", ");
-                  }}
-                >
-                  {Object.entries(MAYJOR).map(([key, value]) => (
-                    <MenuItem key={key} value={value}>
-                      {MAYJOR_TRANSLATION[value]}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <TextField
+                label="Link hình ảnh"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
             </Grid>
+          </Grid>
+
+          {/* Image Preview */}
+          {formData.imageUrl && (
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Ảnh công ty:</Typography>
+                <img
+                  src={formData.imageUrl}
+                  alt="Preview"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "300px",
+                    borderRadius: "8px",
+                    marginTop: "8px",
+                  }}
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {/* Mayjor Select */}
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth required variant="outlined">
+              <InputLabel>Hệ tuyển dụng</InputLabel>
+              <Select
+                label="Hệ tuyển dụng"
+                name="mayjor"
+                value={formData.mayjor}
+                onChange={(e) => handleChangeSelect(e)}
+                multiple
+                renderValue={(selected) => {
+                  return selected
+                    .map((value) => MAYJOR_TRANSLATION[value] || value)
+                    .join(", ");
+                }}
+              >
+                {Object.entries(MAYJOR).map(([key, value]) => (
+                  <MenuItem key={key} value={value}>
+                    {MAYJOR_TRANSLATION[value]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
 
           {/* Detailed Info Row */}
@@ -272,7 +331,7 @@ const InternshipApplicationForm = () => {
                   },
                 }}
               >
-                Tạo đơn tuyển dụng
+                {id ? "Cập nhật đơn thực tập" : "Tạo đơn thực tập"}
               </Button>
             </Grid>
           </Grid>

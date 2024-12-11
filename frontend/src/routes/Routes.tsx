@@ -169,6 +169,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "internship/editInternship/:id",
+        element: (
+          <AdminRoute>
+            <InternshipApplicationForm />
+          </AdminRoute>
+        ),
+      },
+      {
         path: "category",
         element: (
           <ProtectedRoute>
