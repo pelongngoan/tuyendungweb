@@ -48,7 +48,7 @@ const Home = () => {
     return () => {
       if (typingTimeout) clearTimeout(typingTimeout);
     };
-  }, [searchText]);
+  }, [searchText, typingTimeout]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };

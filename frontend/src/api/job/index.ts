@@ -67,8 +67,21 @@ const jobApi = {
     );
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+      id: doc.id as string,
+      company: doc.data().company || "",
+      title: doc.data().title || "",
+      location: doc.data().location || "",
+      salary: doc.data().salary || "",
+      description: doc.data().description || "",
+      requirements: doc.data().requirements || "",
+      benefit: doc.data().benefit || "",
+      experience: doc.data().experience || "",
+      mayjor: doc.data().mayjor || [],
+      other: doc.data().other || [],
+      imageUrl: doc.data().imageUrl || "",
+      createdAt: doc.data().createdAt || "",
+      expireDate: doc.data().expireDate || "",
+      major: doc.data().major || [],
     }));
   },
   getJobsByMajor: async (major: string): Promise<JobPost[]> => {
