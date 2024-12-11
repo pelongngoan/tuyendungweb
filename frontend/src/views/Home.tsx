@@ -27,7 +27,18 @@ const Home = () => {
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
     null
   );
+  useEffect(() => {
+    const fetchRandomJobs = async () => {
+      try {
+        const jobs = await jobApi.getRandomJobs(6); // Fetch 6 random jobs
+        setJobResults(jobs as JobPost[]);
+      } catch (error) {
+        console.error("Error fetching random jobs:", error);
+      }
+    };
 
+    fetchRandomJobs();
+  }, []);
   useEffect(() => {
     if (typingTimeout) {
       clearTimeout(typingTimeout);
@@ -39,7 +50,6 @@ const Home = () => {
           console.log(`Tìm kiếm việc làm với tên: ${searchText}`);
           const jobs = await jobApi.searchJobsByTitle(searchText);
           setJobResults(jobs);
-          console.log(jobs);
         } catch (error) {
           console.error("Lỗi khi lấy danh sách việc làm:", error);
         }

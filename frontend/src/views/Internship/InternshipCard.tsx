@@ -201,23 +201,25 @@ const InternshipCard: React.FC<InternshipCardProps> = ({
               </Button>
             </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Button
-                variant="outlined"
-                sx={{
-                  width: "100%",
-                  borderColor: "#2196f3",
-                  color: "#2196f3",
-                  ":hover": {
-                    backgroundColor: "#2196f3",
-                    color: "#fff",
-                  },
-                }}
-                onClick={() => setDialogOpen(true)}
-              >
-                Xóa
-              </Button>
-            </Grid>
+            {user?.role === "ADMIN" && (
+              <Grid item xs={12} sm={12}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    width: "100%",
+                    borderColor: "#2196f3",
+                    color: "#2196f3",
+                    ":hover": {
+                      backgroundColor: "#2196f3",
+                      color: "#fff",
+                    },
+                  }}
+                  onClick={() => setDialogOpen(true)}
+                >
+                  Xóa
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </CardContent>
       </Card>

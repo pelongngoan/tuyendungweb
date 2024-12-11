@@ -293,6 +293,40 @@ const jobApi = {
       throw error;
     }
   },
+  getRandomJobs: async (count = 6): Promise<JobPost[]> => {
+    try {
+      // Fetch all job posts
+      const querySnapshot = await getDocs(jobPostsColRef);
+
+      // Map all documents to an array of job posts
+      const allJobs = querySnapshot.docs.map((doc) => ({
+        id: doc.id as string,
+        company: doc.data().company || "",
+        title: doc.data().title || "",
+        location: doc.data().location || "",
+        salary: doc.data().salary || "",
+        description: doc.data().description || "",
+        requirements: doc.data().requirements || "",
+        benefit: doc.data().benefit || "",
+        experience: doc.data().experience || "",
+        mayjor: doc.data().mayjor || [],
+        other: doc.data().other || [],
+        imageUrl: doc.data().imageUrl || "",
+        createdAt: doc.data().createAt || "",
+        expireDate: doc.data().expireDate || "",
+        major: doc.data().major || [],
+      })) as JobPost[];
+
+      // Shuffle the array to randomize the jobs
+      const shuffledJobs = allJobs.sort(() => Math.random() - 0.5);
+
+      // Return the first `count` jobs from the shuffled array
+      return shuffledJobs.slice(0, count);
+    } catch (error) {
+      console.error("Error fetching random jobs:", error);
+      throw error;
+    }
+  },
 };
 
 export default jobApi;
