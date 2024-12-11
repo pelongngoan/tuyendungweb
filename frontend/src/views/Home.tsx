@@ -15,9 +15,11 @@ import { useEffect, useState } from "react";
 import { JobPost as Original } from "../api/types";
 import jobApi from "../api/job";
 import JobCard from "./Job/JobCard";
+
 interface JobPost extends Original {
   id: string;
 }
+
 const Home = () => {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
@@ -25,56 +27,69 @@ const Home = () => {
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
     null
   );
+
   useEffect(() => {
     if (typingTimeout) {
-      clearTimeout(typingTimeout); // Clear previous timeout if user keeps typing
+      clearTimeout(typingTimeout);
     }
 
     if (searchText.trim()) {
       const timeout = setTimeout(async () => {
         try {
-          console.log(
-            `Searching for jobs with title containing: ${searchText}`
-          );
-          const jobs = await jobApi.searchJobsByTitle(searchText); // API call
+          console.log(`Tìm kiếm việc làm với tên: ${searchText}`);
+          const jobs = await jobApi.searchJobsByTitle(searchText);
           setJobResults(jobs);
           console.log(jobs);
         } catch (error) {
-          console.error("Error fetching jobs:", error);
+          console.error("Lỗi khi lấy danh sách việc làm:", error);
         }
       }, 2000);
 
       setTypingTimeout(timeout);
     } else {
-      setJobResults([]); // Clear results when input is empty
+      setJobResults([]);
     }
 
     return () => {
       if (typingTimeout) clearTimeout(typingTimeout);
     };
   }, [searchText, typingTimeout]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+
   const handleNavigation = (destination: string) => {
     navigate(`/${destination}`);
   };
+
   return (
     <Box>
       {/* Header Section */}
-      <Box sx={{ backgroundColor: "#FFD700", py: 4, textAlign: "center" }}>
+      <Box
+        sx={{
+          backgroundColor: "#FFD700",
+          py: 6,
+          textAlign: "center",
+          boxShadow: 3,
+        }}
+      >
         <Container maxWidth="md">
-          <Typography variant="h4" fontWeight="bold">
-            Khám phá 15000+ việc làm mới hàng tháng!
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            sx={{ mb: 2, color: "#333" }}
+          >
+            Khám phá hơn 15,000 việc làm mới mỗi tháng!
           </Typography>
-          <Box mt={2} display="flex" justifyContent="center">
+          <Box mt={3} display="flex" justifyContent="center">
             <TextField
               fullWidth
               placeholder="Tìm kiếm việc làm"
               variant="outlined"
               value={searchText}
               onChange={handleInputChange}
-              sx={{ backgroundColor: "white", borderRadius: 1, mr: 2 }}
+              sx={{ backgroundColor: "white", borderRadius: 2, mr: 2 }}
             />
             <Button
               variant="contained"
@@ -86,12 +101,13 @@ const Home = () => {
           </Box>
         </Container>
       </Box>
+
       {/* Job Results Section */}
-      <Container sx={{ py: 4 }}>
+      <Container sx={{ py: 6 }}>
         <Typography variant="h5" align="center" gutterBottom>
           Kết quả tìm kiếm việc làm
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={3} justifyContent="center">
           {jobResults.map((job, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
               <JobCard jobPostDetail={job} />
@@ -99,33 +115,43 @@ const Home = () => {
           ))}
           {!jobResults.length && (
             <Typography
-              variant="body2"
+              variant="body1"
               align="center"
-              sx={{ mt: 2, width: "100%" }}
+              sx={{ mt: 4, width: "100%", color: "#888" }}
             >
               Không có kết quả phù hợp.
             </Typography>
           )}
         </Grid>
       </Container>
+
       {/* Career Exploration Section */}
-      <Container sx={{ py: 4 }}>
+      <Container sx={{ py: 6 }}>
         <Typography variant="h5" align="center" gutterBottom>
-          KHÁM PHÁ NGHỀ NGHIỆP MƠ ƯỚC
+          KHÁM PHÁ NGHỀ NGHIỆP MƠ ƯỜA
         </Typography>
-        <Typography variant="subtitle1" align="center" mb={3}>
-          Tìm hiểu nghề nghiệp và chuyên môn dành cho bạn
+        <Typography variant="subtitle1" align="center" mb={4}>
+          Tìm hiểu nghề nghiệp phù hợp với bạn
         </Typography>
-        <Grid container spacing={2} justifyContent="center">
+        <Grid container spacing={3} justifyContent="center">
           {navigation()[0].children?.map((nav, index) => (
             <Grid item key={index}>
               <Button
                 variant="outlined"
-                sx={{ borderRadius: 3, display: "flex", alignItems: "center" }}
+                sx={{
+                  borderRadius: 4,
+                  px: 3,
+                  py: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  textTransform: "none",
+                }}
                 onClick={() => handleNavigation(nav.path)}
               >
                 {nav.icon}
-                {nav.title}
+                <Typography variant="body1" sx={{ ml: 1 }}>
+                  {nav.title}
+                </Typography>
               </Button>
             </Grid>
           ))}
@@ -133,27 +159,33 @@ const Home = () => {
       </Container>
 
       {/* Advertisement Section */}
-      <Box sx={{ backgroundColor: "#FFD700", py: 4, textAlign: "center" }}>
-        <Typography variant="h5" fontWeight="bold">
-          Tham gia cộng đồng 1,000,000+ ứng viên tài năng
+      <Box
+        sx={{
+          backgroundColor: "#FFD700",
+          py: 6,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold" sx={{ color: "#333" }}>
+          Tham gia cộng đồng hơn 1,000,000 ứng viên tài năng
         </Typography>
       </Box>
 
       {/* Testimonials Section */}
-      <Container sx={{ py: 4 }}>
+      <Container sx={{ py: 6 }}>
         <Typography variant="h5" align="center" gutterBottom>
           Người Dùng InternHub Nói Gì?
         </Typography>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} justifyContent="center">
           {[
             {
               quote:
-                '"I didn\'t really know what I wanted to do and what were all the career paths out there, but now I found my dream career!"',
+                '"Tôi không biết bản thân mình phù hợp với nghề gì, nhưng InternHub giúp tôi tìm ra công việc mơ ước!"',
               name: "Jia Ann, NTU",
             },
             {
               quote:
-                '"The platform is really convenient to reach out to companies, and I’ve secured 2 interviews already!"',
+                '"Nền tảng thực sự tiện lợi, giúp tôi kết nối với doanh nghiệp và tôi đã đặt được 2 cuộc phỏng vấn!"',
               name: "Zai Muhd, NUS",
             },
           ].map((testimonial, index) => (
@@ -179,11 +211,11 @@ const Home = () => {
         sx={{
           backgroundColor: "black",
           color: "white",
-          py: 2,
+          py: 3,
           textAlign: "center",
         }}
       >
-        <Typography variant="body2">© InternHub</Typography>
+        <Typography variant="body2">© 2024 InternHub.</Typography>
       </Box>
     </Box>
   );
