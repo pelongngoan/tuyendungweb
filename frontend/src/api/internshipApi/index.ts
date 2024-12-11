@@ -94,12 +94,8 @@ const internshipApi = {
     internshipId: string
   ): Promise<InternshipPost | null> => {
     try {
-      console.log("first");
-
       const internshipDocRef = doc(db, "internships", internshipId);
       const internshipDocSnapshot = await getDoc(internshipDocRef);
-      console.log(internshipDocSnapshot);
-
       if (internshipDocSnapshot.exists()) {
         return {
           id: internshipDocSnapshot.id,

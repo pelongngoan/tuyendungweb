@@ -42,8 +42,6 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
             user.id,
             jobPostDetail.id
           );
-          console.log(applied);
-
           setHasApplied(applied);
         } catch (error) {
           console.error("Error checking application status:", error);

@@ -91,8 +91,6 @@ const authApi = {
   // Get user by ID (Firestore ID)
   getUserByID: async (userId: string) => {
     try {
-      console.log("Sssss" + userId);
-
       const userDoc = await getDoc(doc(db, "user", userId));
       if (userDoc.exists()) {
         const userData = userDoc.data();
@@ -134,9 +132,6 @@ const authApi = {
       if (!userId) {
         return;
       }
-      console.log(data);
-      console.log(userId);
-
       const userRef = doc(db, "user", userId);
       await updateDoc(userRef, data);
       return { userId, ...data };

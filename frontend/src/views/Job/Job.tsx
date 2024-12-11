@@ -17,21 +17,16 @@ const Job: React.FC = () => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        console.log(major);
-        console.log(mayjor);
         if (mayjor && major) {
-          console.log("a");
           const fetchedJobs = await jobApi.getJobsByMayjorAndMajor(
             major,
             mayjor
           ); // Fetch jobs by major from API
           setJobs(fetchedJobs as JobPost[]);
         } else if (major) {
-          console.log("b");
           const fetchedJobs = await jobApi.getJobsByMajor(major); // Fetch jobs by major from API
           setJobs(fetchedJobs as JobPost[]);
         } else {
-          console.log("c");
           const fetchedJobs = await jobApi.getAllJobPosts(); // Fetch all jobs if no major is provided
           setJobs(fetchedJobs as JobPost[]);
         }

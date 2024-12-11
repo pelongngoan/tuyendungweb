@@ -38,6 +38,7 @@ const Home = () => {
           );
           const jobs = await jobApi.searchJobsByTitle(searchText); // API call
           setJobResults(jobs);
+          console.log(jobs);
         } catch (error) {
           console.error("Error fetching jobs:", error);
         }

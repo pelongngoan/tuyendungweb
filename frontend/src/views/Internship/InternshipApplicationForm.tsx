@@ -89,14 +89,10 @@ const InternshipApplicationForm = () => {
     e.preventDefault();
     try {
       if (!id) {
-        console.log("first");
-
         formData.createdAt = serverTimestamp();
         await internshipApi.createInternshipPost(formData);
         alert(`Tạo đơn thực tập thành công`);
       } else {
-        console.log("ss");
-
         await internshipApi.updateInternshipPost(id!, formData);
         alert(`Chỉnh sửa đơn thực tập thành công`);
       }

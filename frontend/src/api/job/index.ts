@@ -171,8 +171,6 @@ const jobApi = {
     try {
       const jobDocRef = doc(db, "jobs", jobId);
       const jobDocSnapshot = await getDoc(jobDocRef);
-      console.log("sss");
-
       if (jobDocSnapshot.exists()) {
         const jobData = jobDocSnapshot.data();
         return jobData as JobPost;
@@ -231,9 +229,6 @@ const jobApi = {
       // Reference to the user document
       const userDocRef = doc(db, "user", userId);
       const userDocSnapshot = await getDoc(userDocRef);
-      console.log(userId);
-      console.log(jobId);
-
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data();
         // Check if the jobId is in the appliedJobs array

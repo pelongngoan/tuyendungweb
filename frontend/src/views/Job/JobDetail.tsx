@@ -28,8 +28,6 @@ const JobDetail = () => {
       if (id) {
         try {
           const data = await jobApi.getJobById(id);
-          console.log(data);
-
           if (data) {
             setJobPost(data);
           } else {

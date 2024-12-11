@@ -49,8 +49,6 @@ const JobApplicationForm = () => {
     if (id) {
       const fetchJobBy = async () => {
         try {
-          console.log("first");
-
           const fetchedJob = await jobApi.getJobById(id);
           setFormData(fetchedJob!);
         } catch (err) {

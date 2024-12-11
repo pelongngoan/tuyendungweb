@@ -40,8 +40,6 @@ export const Profile = () => {
     phone: user?.phone || "",
     imageUrl: user?.imageUrl || "",
   });
-  console.log(userData);
-
   const [editableField, setEditableField] = useState<string | null>(null); // Track which field is being edited
   const [message, setMessage] = useState("");
 
