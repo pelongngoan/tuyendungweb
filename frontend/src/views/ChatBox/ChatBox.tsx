@@ -14,7 +14,6 @@ import {
 import { Reply, Close } from "@mui/icons-material"; // Import Close icon
 import questionApi from "../../api/question";
 import { useAuth } from "../../context/useAuth";
-import dayjs from "dayjs";
 
 interface Message {
   id: string;
@@ -180,7 +179,7 @@ const ChatBox: React.FC = () => {
                   {message.text}
                 </Typography>
 
-                <Typography
+                {/* <Typography
                   variant="caption"
                   color="textSecondary"
                   sx={{
@@ -191,7 +190,7 @@ const ChatBox: React.FC = () => {
                   }}
                 >
                   {dayjs(message.timestamp).format("HH:mm A")}
-                </Typography>
+                </Typography> */}
 
                 {message.senderId !== currentUserId && (
                   <IconButton

@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.jpg";
 import { InternshipPost } from "../../api/types";
 import { useAuth } from "../../context/useAuth";
 import internshipApi from "../../api/internshipApi";
@@ -29,8 +28,8 @@ const InternshipCard: React.FC<InternshipCardProps> = ({
 }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [hasApplied, setHasApplied] = useState<boolean | null>(null); // To track if the user has applied
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [hasApplied, setHasApplied] = useState<boolean | null>(null); // To track if the user has applied
   useEffect(() => {
     const checkIfApplied = async () => {
       if (user?.id) {
@@ -95,7 +94,7 @@ const InternshipCard: React.FC<InternshipCardProps> = ({
           {/* Company Logo and Title */}
           <Box display="flex" alignItems="center" mb={2}>
             <img
-              src={Logo} // Using dynamic logo or default
+              src={internshipPostDetail.imageUrl} // Using dynamic logo or default
               alt={internshipPostDetail.company}
               style={{ width: 50, height: 50, marginRight: 16 }}
             />

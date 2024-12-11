@@ -3,10 +3,13 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import authApi from "../../api/auth";
 import { useAuth } from "../../context/useAuth";
 import JobSmallCard from "../Profile/JobSmallCard";
+import InternSmallCard from "../Profile/InternSmallCard";
 
 const ViewApply = () => {
   const { user } = useAuth();
   const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
+  const [appliedInterns, setAppliedInterns] = useState<string[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +29,23 @@ const ViewApply = () => {
     };
 
     fetchAppliedJobs();
+  }, [user?.id]); // Ensure it reruns when user.id changes
+  useEffect(() => {
+    const fetchAppliedInterns = async () => {
+      if (user?.id) {
+        try {
+          const interns = await authApi.getAppliedInterns(user?.id);
+          setAppliedInterns(interns);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+          setError("Error fetching applied interns");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchAppliedInterns();
   }, [user?.id]); // Ensure it reruns when user.id changes
 
   if (loading) {
@@ -57,6 +77,17 @@ const ViewApply = () => {
             {appliedJobs.map((jobId, index) => (
               <Box key={index} sx={{ marginBottom: "20px" }}>
                 <JobSmallCard id={jobId} />
+              </Box>
+            ))}
+          </Box>
+        )}
+        {appliedInterns.length === 0 ? (
+          <Typography variant="h6">Bạn chưa apply đơn nào cả</Typography>
+        ) : (
+          <Box>
+            {appliedInterns.map((internId, index) => (
+              <Box key={index} sx={{ marginBottom: "20px" }}>
+                <InternSmallCard id={internId} />
               </Box>
             ))}
           </Box>

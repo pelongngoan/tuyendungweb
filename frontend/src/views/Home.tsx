@@ -12,9 +12,12 @@ import {
 import { navigation } from "../navigation";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { JobPost } from "../api/types";
+import { JobPost as Original } from "../api/types";
 import jobApi from "../api/job";
-
+import JobCard from "./Job/JobCard";
+interface JobPost extends Original {
+  id: string;
+}
 const Home = () => {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
@@ -53,8 +56,6 @@ const Home = () => {
     setSearchText(e.target.value);
   };
   const handleNavigation = (destination: string) => {
-    console.log(destination);
-
     navigate(`/${destination}`);
   };
   return (
@@ -91,18 +92,8 @@ const Home = () => {
         </Typography>
         <Grid container spacing={2}>
           {jobResults.map((job, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card elevation={3}>
-                <CardContent>
-                  <Typography variant="h6">{job.title}</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {job.company} - {job.location}
-                  </Typography>
-                  <Typography variant="body1" mt={2}>
-                    {job.description}
-                  </Typography>
-                </CardContent>
-              </Card>
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <JobCard jobPostDetail={job} />
             </Grid>
           ))}
           {!jobResults.length && (

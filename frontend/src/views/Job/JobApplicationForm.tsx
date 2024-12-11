@@ -23,7 +23,7 @@ import {
   MAYJOR_TRANSLATION,
 } from "../../api/enum";
 import { serverTimestamp } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // interface JobApplicationFormParams {
 //   dataParams?: JobPost;
 // }
@@ -95,6 +95,7 @@ const JobApplicationForm = () => {
     };
     setFormData((prev) => ({ ...prev, other: updatedOtherFields }));
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,6 +111,8 @@ const JobApplicationForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert("Failed to create job post. Please try again.");
+    } finally {
+      navigate("/internship");
     }
   };
   // const handleDateChange = (date: Date | null) => {

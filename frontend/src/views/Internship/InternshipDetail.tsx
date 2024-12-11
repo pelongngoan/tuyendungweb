@@ -1,25 +1,60 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, Chip, CircularProgress } from "@mui/material";
-import { useParams } from "react-router-dom"; // Import useParams to get the URL params
+import { Box, Typography, Chip, CircularProgress, Button } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams to get the URL params
 import { InternshipPost } from "../../api/types";
 import { MAYJOR_TRANSLATION } from "../../api/enum";
 import internshipApi from "../../api/internshipApi";
-
+import { useAuth } from "../../context/useAuth";
 const InternshipDetail = () => {
   const { id } = useParams<{ id: string }>(); // Get internshipId from URL
+  const { user } = useAuth();
   const [internshipPost, setInternshipPost] = useState<InternshipPost | null>(
     null
   );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasApplied, setHasApplied] = useState<boolean | null>(null); // To track if the user has applied
+  const [applying, setApplying] = useState<boolean>(false);
+  const navigate = useNavigate();
 
+  const handleApply = async () => {
+    if (user?.id && internshipPost) {
+      setApplying(true);
+      try {
+        await internshipApi.applyInternship(user!.id, id!); // API call to apply for the job
+        setHasApplied(true); // Update state to reflect that the user has applied
+        alert("Applied for the job successfully!");
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setApplying(false);
+        alert("Failed to apply for the job.");
+      } finally {
+        navigate("/intership");
+      }
+    }
+  };
+  useEffect(() => {
+    const checkIfApplied = async () => {
+      if (user?.id) {
+        try {
+          const applied = await internshipApi.checkInternshipStatus(
+            user.id,
+            id!
+          );
+          setHasApplied(applied);
+        } catch (error) {
+          console.error("Error checking application status:", error);
+        }
+      }
+    };
+
+    checkIfApplied();
+  }, [id, user?.id]);
   useEffect(() => {
     const fetchInternshipPost = async () => {
       if (id) {
         try {
           const data = await internshipApi.getInternshipById(id); // Fetch internship details by ID
-          console.log(data);
-
           if (data) {
             setInternshipPost(data);
           } else {
@@ -191,6 +226,20 @@ const InternshipDetail = () => {
           </Box>
         ))}
       </Box>
+      {!hasApplied ? (
+        <Box sx={{ marginTop: "20px", textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleApply}
+            disabled={applying}
+          >
+            {applying ? "Applying..." : "Apply"}
+          </Button>
+        </Box>
+      ) : (
+        ""
+      )}
     </Box>
   );
 };

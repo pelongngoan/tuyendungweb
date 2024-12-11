@@ -7,12 +7,11 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import jobApi from "../../api/job"; // Adjust the path to your job API
 import { JobPost } from "../../api/types";
 import { MAYJOR_TRANSLATION } from "../../api/enum";
 import { useAuth } from "../../context/useAuth";
-import authApi from "../../api/auth";
 
 const JobDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +20,8 @@ const JobDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [applying, setApplying] = useState<boolean>(false);
+  const [hasApplied, setHasApplied] = useState<boolean | null>(null); // To track if the user has applied
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobPost = async () => {
@@ -52,13 +53,15 @@ const JobDetail = () => {
     if (user?.id && jobPost) {
       setApplying(true);
       try {
-        await authApi.updateUserAppliedJobs(user.id, id!); // Add job ID to user
-        setApplying(false);
+        await jobApi.applyJob(user.id, id!); // Add job ID to user
+        setHasApplied(true); // Update state to reflect that the user has applied
         alert("Applied for the job successfully!");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setApplying(false);
         alert("Failed to apply for the job.");
+      } finally {
+        navigate("/job");
       }
     }
   };
@@ -256,17 +259,20 @@ const JobDetail = () => {
         ))}
       </Box>
 
-      {/* Apply Button */}
-      <Box sx={{ marginTop: "20px", textAlign: "center" }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleApply}
-          disabled={applying}
-        >
-          {applying ? "Applying..." : "Apply"}
-        </Button>
-      </Box>
+      {!hasApplied ? (
+        <Box sx={{ marginTop: "20px", textAlign: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleApply}
+            disabled={applying}
+          >
+            {applying ? "Applying..." : "Apply"}
+          </Button>
+        </Box>
+      ) : (
+        ""
+      )}
     </Box>
   );
 };
