@@ -25,6 +25,7 @@ interface HeaderProps {
   user: UserDataType | null;
   onLogout: () => void;
   onUpdateProfile: () => void;
+  onApplyJobView: () => void;
 }
 
 export const Header = ({
@@ -32,6 +33,7 @@ export const Header = ({
   user,
   onLogout,
   onUpdateProfile,
+  onApplyJobView,
 }: HeaderProps) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -57,6 +59,7 @@ export const Header = ({
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+    setAnchorElChildren(null);
   };
   const handleOpenMenuChildren = (
     event: React.MouseEvent<HTMLElement>,
@@ -198,8 +201,10 @@ export const Header = ({
                   onClick={(event) => {
                     handleOpenMenuChildren(event, child.children);
                   }}
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
                 >
                   {child.icon}
+
                   {child.title}
                 </MenuItem>
               ))}
@@ -224,6 +229,7 @@ export const Header = ({
                     handleCloseMenu();
                     onNavigate(`job${child.path}`);
                   }}
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
                 >
                   {child.icon}
                   {child.title}
@@ -293,10 +299,11 @@ export const Header = ({
                     fontSize: "14px",
                   }}
                 >
-                  {user.firstName}
+                  {`${user.firstName}  ${user.lastName}`}
                 </Typography>
                 <Avatar
-                  alt={user.firstName}
+                  alt={`${user.firstName}  ${user.lastName}`}
+                  src={user.imageUrl}
                   sx={{ width: 32, height: 32, cursor: "pointer" }}
                 />
               </Box>
@@ -305,8 +312,30 @@ export const Header = ({
                 open={Boolean(avatarMenuAnchor)}
                 onClose={handleAvatarMenuClose}
               >
-                <MenuItem onClick={onUpdateProfile}>Update Profile</MenuItem>
-                <MenuItem onClick={onLogout}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onUpdateProfile();
+                    handleAvatarMenuClose();
+                  }}
+                >
+                  Chỉnh sửa hồ sơ
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onApplyJobView();
+                    handleAvatarMenuClose();
+                  }}
+                >
+                  Xem đơn ứng tuyển
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    onLogout();
+                    handleAvatarMenuClose();
+                  }}
+                >
+                  Đăng xuất
+                </MenuItem>
               </Menu>
             </>
           ) : (

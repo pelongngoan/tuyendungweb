@@ -191,7 +191,7 @@ const Home = () => {
           textAlign: "center",
         }}
       >
-        <Typography variant="body2">© Glints Asia Pacific</Typography>
+        <Typography variant="body2">© InternHub</Typography>
       </Box>
     </Box>
   );

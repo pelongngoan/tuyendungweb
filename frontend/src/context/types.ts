@@ -53,6 +53,7 @@ export interface RegisterParams {
   lastName?: string;
   age?: number;
   location?: string;
+  imageUrl?: string;
   major?: string;
   cn?: string;
   phone?: string;

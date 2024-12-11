@@ -158,7 +158,55 @@ const authApi = {
     }
   },
 
-  // Other methods...
+  updateUserAppliedJobs: async (userId: string | undefined, jobId: string) => {
+    try {
+      if (!userId) {
+        return;
+      }
+
+      // Fetch the current user's document
+      const userRef = doc(db, "user", userId);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const appliedJobs = userData?.appliedJobs || [];
+
+        // If the job is not already applied, add it to the array
+        if (!appliedJobs.includes(jobId)) {
+          appliedJobs.push(jobId);
+        }
+
+        // Update the user document with the new applied job
+        await updateDoc(userRef, {
+          appliedJobs: appliedJobs,
+        });
+
+        return { userId, appliedJobs };
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Error applying for job:", error);
+      throw error;
+    }
+  },
+  // Get all applied jobs for a user
+  getAppliedJobs: async (userId: string) => {
+    try {
+      const userDoc = await getDoc(doc(db, "user", userId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const appliedJobs = userData?.appliedJobs || [];
+        return appliedJobs;
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Error fetching applied jobs:", error);
+      throw error;
+    }
+  },
 };
 
 export default authApi;

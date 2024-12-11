@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -32,9 +32,29 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
   const navigate = useNavigate();
 
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [hasApplied, setHasApplied] = useState<boolean | null>(null); // To track if the user has applied
+
+  useEffect(() => {
+    const checkIfApplied = async () => {
+      if (user?.id) {
+        try {
+          const applied = await jobApi.checkApplicationStatus(
+            user.id,
+            jobPostDetail.id
+          );
+          console.log(applied);
+
+          setHasApplied(applied);
+        } catch (error) {
+          console.error("Error checking application status:", error);
+        }
+      }
+    };
+
+    checkIfApplied();
+  }, [jobPostDetail.id, user?.id]);
 
   const handleNavigation = (path: string) => {
-    console.log(path);
     navigate(path);
   };
 
@@ -47,10 +67,25 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
     setDialogOpen(false);
   };
 
+  const handleApplyUnapply = async () => {
+    if (hasApplied === null) return; // Avoid action if the application status is unknown
+
+    try {
+      if (hasApplied) {
+        // If already applied, handle unapplying
+        await jobApi.unapplyJob(user!.id, jobPostDetail.id); // API call to unapply
+        setHasApplied(false); // Update state to reflect that the user has unapplied
+      } else {
+        // If not applied, handle applying
+        await jobApi.applyJob(user!.id!, jobPostDetail.id); // API call to apply for the job
+        setHasApplied(true); // Update state to reflect that the user has applied
+      }
+    } catch (error) {
+      console.error("Error applying/unapplying job:", error);
+    }
+  };
+
   // Calculate remaining days and format dates
-  // const uploadDate = dayjs(jobPostDetail.createdAt.toString()).format(
-  //   "DD/MM/YYYY"
-  // );
   const remainingDays = dayjs(jobPostDetail.expireDate).diff(dayjs(), "day");
 
   return (
@@ -65,7 +100,6 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
         }}
       >
         <CardContent>
-          {/* Company Logo and Title */}
           <Box display="flex" alignItems="center" mb={2}>
             <img
               src={jobPostDetail.imageUrl}
@@ -79,7 +113,6 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
             </Tooltip>
           </Box>
 
-          {/* Job Title */}
           <Tooltip title={jobPostDetail.title}>
             <Typography
               variant="h6"
@@ -95,7 +128,6 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
             </Typography>
           </Tooltip>
 
-          {/* Job Location and Salary */}
           <Box mb={2}>
             <Typography
               variant="body2"
@@ -122,11 +154,7 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
             </Typography>
           </Box>
 
-          {/* Upload Date and Remaining Days */}
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="body2" color="text.secondary">
-              {/* Ngày đăng: {uploadDate} */}
-            </Typography>
             <Typography
               variant="body2"
               color={remainingDays > 0 ? "green" : "red"}
@@ -135,10 +163,8 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
             </Typography>
           </Box>
 
-          {/* Divider */}
           <Divider sx={{ marginBottom: 2 }} />
 
-          {/* Buttons */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={user?.role === "ADMIN" ? 6 : 12}>
               <Button
@@ -159,6 +185,7 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
                 Xem chi tiết
               </Button>
             </Grid>
+
             {user?.role === "ADMIN" && (
               <>
                 <Grid item xs={12} sm={6}>
@@ -182,6 +209,29 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
                 </Grid>
               </>
             )}
+
+            <Grid item xs={12} sm={12}>
+              <Button
+                variant="outlined"
+                sx={{
+                  width: "100%",
+                  borderColor: "#2196f3",
+                  color: "#2196f3",
+                  ":hover": {
+                    backgroundColor: "#2196f3",
+                    color: "#fff",
+                  },
+                }}
+                onClick={handleApplyUnapply}
+              >
+                {hasApplied === null
+                  ? "Loading..."
+                  : hasApplied
+                  ? "Hủy đăng ký"
+                  : "Đăng ký"}
+              </Button>
+            </Grid>
+
             <Grid item xs={12} sm={12}>
               <Button
                 variant="outlined"
@@ -203,7 +253,6 @@ const JobCard = ({ jobPostDetail }: JobCardProps) => {
         </CardContent>
       </Card>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={isDialogOpen}
         onClose={() => setDialogOpen(false)}

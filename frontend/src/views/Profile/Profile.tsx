@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   TextField,
   Button,
@@ -31,7 +31,6 @@ export const Profile = () => {
 
   const [userData, setUserData] = useState<RegisterParams>({
     email: user?.email || "",
-    password: user?.password || "",
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     age: user?.age || 0,
@@ -39,18 +38,27 @@ export const Profile = () => {
     major: user?.major || "",
     cn: user?.cn || "",
     phone: user?.phone || "",
+    imageUrl: user?.imageUrl || "",
   });
   console.log(userData);
 
   const [editableField, setEditableField] = useState<string | null>(null); // Track which field is being edited
   const [message, setMessage] = useState("");
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setUserData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+  const handleInputChange = (
+    e:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | { name: string; value: string }
+  ) => {
+    const { name, value } = "target" in e ? e.target : e; // Check if event has a target property
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleChangeSelect = (e: SelectChangeEvent<string>) => {
@@ -93,7 +101,9 @@ export const Profile = () => {
     label: string,
     isEditable: boolean
   ) => {
-    if (!userData) return null; // Add a guard to ensure userData is not undefined
+    if (!userData) return null;
+
+    const isNumericField = field === "phone" || field === "age"; // Specify numeric fields
 
     return isEditable ? (
       <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -102,8 +112,21 @@ export const Profile = () => {
           label={label}
           name={field}
           value={userData[field] || ""}
-          onChange={handleInputChange}
+          onChange={(e) => {
+            if (isNumericField) {
+              const numericValue = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+              handleInputChange({ name: field, value: numericValue }); // Pass custom object
+            } else {
+              handleInputChange(e); // Pass the event directly
+            }
+          }}
           required
+          type="text" // Avoid spinners
+          inputProps={
+            isNumericField
+              ? { inputMode: "numeric", pattern: "[0-9]*" }
+              : undefined
+          }
         />
         <IconButton onClick={() => handleEditClick(field)} color="primary">
           <EditIcon />
@@ -161,6 +184,18 @@ export const Profile = () => {
               {renderField("phone", "Phone", editableField === "phone")}
             </Grid>
             <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Tuổi</Typography>
+              {renderField("age", "Age", editableField === "age")}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Địa chỉ</Typography>
+              {renderField(
+                "location",
+                "Location",
+                editableField === "location"
+              )}
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth required variant="outlined">
                 <InputLabel>Hệ theo học</InputLabel>
                 <Select
@@ -199,6 +234,32 @@ export const Profile = () => {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Hình ảnh hồ sơ</Typography>
+              <TextField
+                fullWidth
+                label="Profile Image URL"
+                name="imageUrl"
+                value={userData.imageUrl || ""}
+                onChange={handleInputChange}
+                variant="outlined"
+                sx={{ marginBottom: 2 }}
+              />
+              {userData.imageUrl && (
+                <Box textAlign="center">
+                  <Typography variant="body2">Image Preview:</Typography>
+                  <img
+                    src={userData.imageUrl}
+                    alt="Profile"
+                    style={{
+                      maxWidth: "200px",
+                      borderRadius: "8px",
+                      marginTop: "8px",
+                    }}
+                  />
+                </Box>
+              )}
             </Grid>
 
             {/* Submit Button */}

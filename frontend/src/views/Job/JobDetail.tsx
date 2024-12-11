@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, Chip, CircularProgress } from "@mui/material";
-import { useParams } from "react-router-dom"; // Import useParams to get the URL params
+import {
+  Box,
+  Typography,
+  Chip,
+  CircularProgress,
+  Button,
+  Avatar,
+} from "@mui/material";
+import { useParams } from "react-router-dom";
 import jobApi from "../../api/job"; // Adjust the path to your job API
 import { JobPost } from "../../api/types";
 import { MAYJOR_TRANSLATION } from "../../api/enum";
+import { useAuth } from "../../context/useAuth";
+import authApi from "../../api/auth";
 
 const JobDetail = () => {
-  const { id } = useParams<{ id: string }>(); // Get jobId from URL
+  const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [jobPost, setJobPost] = useState<JobPost | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [applying, setApplying] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchJobPost = async () => {
       if (id) {
         try {
-          const data = await jobApi.getJobById(id); // Fetch job details by ID
+          const data = await jobApi.getJobById(id);
           console.log(data);
 
           if (data) {
@@ -36,6 +47,21 @@ const JobDetail = () => {
       fetchJobPost();
     }
   }, [id]);
+
+  const handleApply = async () => {
+    if (user?.id && jobPost) {
+      setApplying(true);
+      try {
+        await authApi.updateUserAppliedJobs(user.id, id!); // Add job ID to user
+        setApplying(false);
+        alert("Applied for the job successfully!");
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        setApplying(false);
+        alert("Failed to apply for the job.");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -82,20 +108,36 @@ const JobDetail = () => {
           padding: "24px",
           borderRadius: "12px 12px 0 0",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <Typography variant="h5" fontWeight="bold" sx={{ marginBottom: "8px" }}>
-          {jobPost.title}
-        </Typography>
-        <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Công ty:</strong> {jobPost.company}
-        </Typography>
-        <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Lương:</strong> {jobPost.salary}
-        </Typography>
-        <Typography variant="h6" sx={{ marginBottom: "4px" }}>
-          <strong>Địa điểm:</strong> {jobPost.location}
-        </Typography>
+        {/* Company Image */}
+        {jobPost.imageUrl && (
+          <Avatar
+            src={jobPost.imageUrl}
+            alt={jobPost.company}
+            sx={{ width: 56, height: 56, marginRight: "16px" }}
+          />
+        )}
+        <Box>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{ marginBottom: "8px" }}
+          >
+            {jobPost.title}
+          </Typography>
+          <Typography variant="h6" sx={{ marginBottom: "4px" }}>
+            <strong>Công ty:</strong> {jobPost.company}
+          </Typography>
+          <Typography variant="h6" sx={{ marginBottom: "4px" }}>
+            <strong>Lương:</strong> {jobPost.salary}
+          </Typography>
+          <Typography variant="h6" sx={{ marginBottom: "4px" }}>
+            <strong>Địa điểm:</strong> {jobPost.location}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Description Section */}
@@ -112,7 +154,7 @@ const JobDetail = () => {
           dangerouslySetInnerHTML={{
             __html: jobPost.description,
           }}
-          style={{ textAlign: "left" }} // Ensures that the description content aligns left
+          style={{ textAlign: "left" }}
         />
       </Box>
 
@@ -130,7 +172,7 @@ const JobDetail = () => {
           dangerouslySetInnerHTML={{
             __html: jobPost.requirements,
           }}
-          style={{ textAlign: "left" }} // Aligns the requirements content to the left
+          style={{ textAlign: "left" }}
         />
       </Box>
 
@@ -148,7 +190,7 @@ const JobDetail = () => {
           dangerouslySetInnerHTML={{
             __html: jobPost.benefit,
           }}
-          style={{ textAlign: "left" }} // Aligns the benefits content to the left
+          style={{ textAlign: "left" }}
         />
       </Box>
 
@@ -166,7 +208,7 @@ const JobDetail = () => {
           dangerouslySetInnerHTML={{
             __html: jobPost.experience || "Không yêu cầu kinh nghiệm",
           }}
-          style={{ textAlign: "left" }} // Aligns the experience content to the left
+          style={{ textAlign: "left" }}
         />
       </Box>
 
@@ -212,6 +254,18 @@ const JobDetail = () => {
             />
           </Box>
         ))}
+      </Box>
+
+      {/* Apply Button */}
+      <Box sx={{ marginTop: "20px", textAlign: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleApply}
+          disabled={applying}
+        >
+          {applying ? "Applying..." : "Apply"}
+        </Button>
       </Box>
     </Box>
   );

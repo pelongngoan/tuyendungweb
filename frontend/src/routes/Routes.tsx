@@ -20,6 +20,7 @@ import InternshipApplicationForm from "../views/Internship/InternshipApplication
 import InternshipDetail from "../views/Internship/InternshipDetail";
 import AdminRoute from "./AdminRoute";
 import ChatBox from "../views/ChatBox/ChatBox";
+import ViewApply from "../views/ViewApply/ViewApply";
 
 export const router = createBrowserRouter([
   {
@@ -172,6 +173,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Category />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "viewApply",
+        element: (
+          <ProtectedRoute>
+            <ViewApply />
           </ProtectedRoute>
         ),
       },

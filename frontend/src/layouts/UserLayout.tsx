@@ -18,6 +18,9 @@ const UserLayout = () => {
   const handleUpdate = () => {
     navigate("profile");
   };
+  const handleViewApply = () => {
+    navigate("viewApply");
+  };
 
   return (
     <Box
@@ -33,6 +36,7 @@ const UserLayout = () => {
         onLogout={handleLogout}
         onUpdateProfile={handleUpdate}
         user={user}
+        onApplyJobView={handleViewApply}
       />
       <Box
         component="main"
