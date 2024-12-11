@@ -68,7 +68,7 @@ const ViewApply = () => {
 
   return (
     <Box sx={{ padding: "24px" }}>
-      <Typography variant="h5">Các đơn đã đăng ký</Typography>
+      <Typography variant="h5">Các đơn tuyển dụng đã đăng ký</Typography>
       <Box sx={{ marginTop: "20px" }}>
         {appliedJobs.length === 0 ? (
           <Typography variant="h6">Bạn chưa apply đơn nào cả</Typography>
@@ -81,17 +81,22 @@ const ViewApply = () => {
             ))}
           </Box>
         )}
-        {appliedInterns.length === 0 ? (
-          <Typography variant="h6">Bạn chưa apply đơn nào cả</Typography>
-        ) : (
-          <Box>
-            {appliedInterns.map((internId, index) => (
-              <Box key={index} sx={{ marginBottom: "20px" }}>
-                <InternSmallCard id={internId} />
-              </Box>
-            ))}
-          </Box>
-        )}
+        <Typography variant="h5">
+          Các chương trình thực tập và học bổng đã đăng ký
+        </Typography>
+        <Box sx={{ marginTop: "20px" }}>
+          {appliedInterns.length === 0 ? (
+            <Typography variant="h6">Bạn chưa apply đơn nào cả</Typography>
+          ) : (
+            <Box>
+              {appliedInterns.map((internId, index) => (
+                <Box key={index} sx={{ marginBottom: "20px" }}>
+                  <InternSmallCard id={internId} />
+                </Box>
+              ))}
+            </Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

@@ -8,6 +8,7 @@ import {
   deleteDoc,
   query,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../db/firebaseConfig";
 import { LoginParams, RegisterParams } from "../types";
@@ -132,11 +133,31 @@ const authApi = {
       if (!userId) {
         return;
       }
+
+      // Update user in "user" collection
       const userRef = doc(db, "user", userId);
       await updateDoc(userRef, data);
+
+      // Update related questions in "question" collection
+      if (data.imageUrl) {
+        const questionQuery = query(
+          collection(db, "question"),
+          where("senderId", "==", userId)
+        );
+
+        const questionDocs = await getDocs(questionQuery);
+
+        const batch = writeBatch(db);
+        questionDocs.forEach((doc) => {
+          batch.update(doc.ref, { senderAvatar: data.imageUrl });
+        });
+
+        await batch.commit();
+      }
+
       return { userId, ...data };
     } catch (error) {
-      console.error("Error updating user data:", error);
+      console.error("Error updating user or related questions:", error);
       throw error;
     }
   },

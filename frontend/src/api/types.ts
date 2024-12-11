@@ -9,6 +9,7 @@ export interface RegisterParams {
   age?: number;
   location?: string;
   major?: string;
+  imageUrl?: string;
   phone?: string;
   role?: string;
 }

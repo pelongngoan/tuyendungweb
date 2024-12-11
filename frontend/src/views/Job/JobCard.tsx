@@ -17,7 +17,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { JobPost as OriginalJobPost } from "../../api/types";
 import { useAuth } from "../../context/useAuth";
-import dayjs from "dayjs";
 import jobApi from "../../api/job";
 
 interface JobPost extends OriginalJobPost {

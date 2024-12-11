@@ -132,7 +132,15 @@ export const Profile = () => {
       </Box>
     ) : (
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1" flexGrow={1}>
+        <Typography
+          variant="body1"
+          flexGrow={1}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
           {userData[field] || "No data available"}
         </Typography>
         <IconButton onClick={() => handleEditClick(field)} color="primary">
@@ -192,6 +200,30 @@ export const Profile = () => {
                 "Location",
                 editableField === "location"
               )}
+            </Grid>{" "}
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Ảnh đại diện</Typography>
+              {renderField(
+                "imageUrl",
+                "ImageUrl",
+                editableField === "imageUrl"
+              )}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="h6">Hình ảnh hồ sơ</Typography>
+              {userData.imageUrl && (
+                <Box textAlign="center">
+                  <img
+                    src={userData.imageUrl}
+                    alt="Profile"
+                    style={{
+                      maxWidth: "200px",
+                      borderRadius: "8px",
+                      marginTop: "8px",
+                    }}
+                  />
+                </Box>
+              )}
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required variant="outlined">
@@ -233,33 +265,6 @@ export const Profile = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h6">Hình ảnh hồ sơ</Typography>
-              <TextField
-                fullWidth
-                label="Profile Image URL"
-                name="imageUrl"
-                value={userData.imageUrl || ""}
-                onChange={handleInputChange}
-                variant="outlined"
-                sx={{ marginBottom: 2 }}
-              />
-              {userData.imageUrl && (
-                <Box textAlign="center">
-                  <Typography variant="body2">Image Preview:</Typography>
-                  <img
-                    src={userData.imageUrl}
-                    alt="Profile"
-                    style={{
-                      maxWidth: "200px",
-                      borderRadius: "8px",
-                      marginTop: "8px",
-                    }}
-                  />
-                </Box>
-              )}
-            </Grid>
-
             {/* Submit Button */}
             <Grid item xs={12}>
               {editableField ? (
@@ -270,7 +275,7 @@ export const Profile = () => {
                   fullWidth
                   sx={{ marginTop: 2 }}
                 >
-                  Save Changes
+                  Lưu thay đổi
                 </Button>
               ) : (
                 <Button
@@ -281,7 +286,7 @@ export const Profile = () => {
                   disabled
                   sx={{ marginTop: 2 }}
                 >
-                  Edit Mode Disabled
+                  Lưu thay đổi
                 </Button>
               )}
             </Grid>
