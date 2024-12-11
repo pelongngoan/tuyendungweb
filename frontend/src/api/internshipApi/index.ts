@@ -44,6 +44,7 @@ const internshipApi = {
             mayjor: data.mayjor || [],
             other: data.other || [],
             createdAt: data.createAt || "",
+            imageUrl: data.imageUrl || "",
           };
         }
       );
@@ -77,6 +78,7 @@ const internshipApi = {
             mayjor: data.mayjor || [],
             other: data.other || [],
             createdAt: data.createAt || "",
+            imageUrl: data.imageUrl || "",
           };
         }
       );
