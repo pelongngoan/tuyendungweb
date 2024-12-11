@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import authApi from "../../api/auth";
 import { useAuth } from "../../context/useAuth";
