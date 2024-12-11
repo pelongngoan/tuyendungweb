@@ -39,7 +39,7 @@ const Job: React.FC = () => {
     };
 
     fetchJobs();
-  }, [major]); // Fetch jobs whenever the major URL parameter changes
+  }, [major, mayjor]); // Fetch jobs whenever the major URL parameter changes
 
   if (loading) {
     return (

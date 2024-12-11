@@ -80,6 +80,8 @@ const jobApi = {
       where("title", ">=", title),
       where("title", "<=", title + "\uf8ff")
     );
+    console.log(title);
+
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => ({
       id: doc.id as string,
