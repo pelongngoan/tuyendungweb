@@ -1,5 +1,3 @@
-import WorkIcon from "@mui/icons-material/Work";
-import InfoIcon from "@mui/icons-material/Info";
 import England from "../assets/england.svg";
 import Arab from "../assets/arab.svg";
 import China from "../assets/china.svg";
@@ -16,13 +14,64 @@ export interface NavItem {
   path: string;
   icon?: JSX.Element;
   children?: NavItem[];
+  access?: boolean;
 }
+
+const createLanguageChildren = (
+  countryName: string,
+  icon: string
+): NavItem[] => [
+  {
+    title: "Biên phiên dịch",
+    path: `/${countryName.toLowerCase()}/translator`,
+    icon: (
+      <img
+        src={icon}
+        alt={countryName}
+        style={{ width: "24px", height: "24px" }}
+      />
+    ),
+  },
+  {
+    title: "Giáo dục",
+    path: `/${countryName.toLowerCase()}/education`,
+    icon: (
+      <img
+        src={icon}
+        alt={countryName}
+        style={{ width: "24px", height: "24px" }}
+      />
+    ),
+  },
+  {
+    title: "Du lịch",
+    path: `/${countryName.toLowerCase()}/travel`,
+    icon: (
+      <img
+        src={icon}
+        alt={countryName}
+        style={{ width: "24px", height: "24px" }}
+      />
+    ),
+  },
+  {
+    title: "Các ngành khác",
+    path: `/${countryName.toLowerCase()}/other`,
+    icon: (
+      <img
+        src={icon}
+        alt={countryName}
+        style={{ width: "24px", height: "24px" }}
+      />
+    ),
+  },
+];
 
 export const navigation = (): NavItem[] => [
   {
     title: "Việc thực tập",
     path: "job",
-    icon: <WorkIcon />,
+    access: true,
     children: [
       {
         title: "Tiếng Anh",
@@ -34,6 +83,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("English", England),
       },
       {
         title: "Văn hóa và truyền thông xuyên quốc gia",
@@ -45,6 +95,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Tradition", Tradition),
       },
       {
         title: "Hàn",
@@ -56,6 +107,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Korea", Korea),
       },
       {
         title: "Nhật",
@@ -67,6 +119,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Japan", Japan),
       },
       {
         title: "Nga",
@@ -78,6 +131,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Russia", Russia),
       },
       {
         title: "Trung",
@@ -89,6 +143,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("China", China),
       },
       {
         title: "Ả Rập",
@@ -100,6 +155,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Arab", Arab),
       },
       {
         title: "Kinh tế - Tài chính",
@@ -107,10 +163,11 @@ export const navigation = (): NavItem[] => [
         icon: (
           <img
             src={Economy}
-            alt="economy"
+            alt="Economy"
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Economy", Economy),
       },
       {
         title: "Đức",
@@ -122,6 +179,7 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("Germany", Germany),
       },
       {
         title: "Pháp",
@@ -133,24 +191,33 @@ export const navigation = (): NavItem[] => [
             style={{ width: "24px", height: "24px" }}
           />
         ),
+        children: createLanguageChildren("France", France),
       },
     ],
   },
   {
     title: "Chương trình thực tập",
     path: "internship",
+    access: true,
   },
   {
     title: "Tạo hồ sơ công việc",
     path: "createJob",
+    access: false,
   },
   {
     title: "Tạo hồ sơ thực tập",
     path: "internshipCreate",
+    access: false,
   },
   {
     title: "About",
     path: "about",
-    icon: <InfoIcon />,
+    access: true,
+  },
+  {
+    title: "Đặt câu hỏi",
+    path: "chatBox",
+    access: true,
   },
 ];

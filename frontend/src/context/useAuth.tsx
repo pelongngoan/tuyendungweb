@@ -8,6 +8,7 @@ import {
   UserDataType,
 } from "./types";
 import authApi from "../api/auth";
+import { Alert, Snackbar } from "@mui/material";
 
 const defaultProvider: UserContextType = {
   user: null,
@@ -19,6 +20,12 @@ const defaultProvider: UserContextType = {
   token: null,
   registerUser: () => Promise.resolve(),
   isLoggedIn: () => false,
+  alert: false,
+  setAlert: () => false,
+  alertInfo: {
+    message: "",
+    severity: "info",
+  },
 };
 
 type Props = { children: React.ReactNode };
@@ -30,6 +37,11 @@ export const UserProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [alert, setAlert] = useState<boolean>(false);
+  const [alertInfo, setAlertInfo] = useState<
+    | { message: string; severity: "success" | "error" | "info" | "warning" }
+    | undefined
+  >(undefined);
 
   useEffect(() => {
     // Retrieve user and token from localStorage on mount
@@ -48,15 +60,16 @@ export const UserProvider = ({ children }: Props) => {
       const response = await authApi.login(params);
       setUser(response.user);
       localStorage.setItem("user", JSON.stringify(response.user));
+      setAlertInfo({ message: "Đăng nhập thành công!", severity: "success" });
       navigate("/home");
     } catch (err) {
-      if (err instanceof Error) {
-        console.error("Login failed:", err.message);
-        errorCallback?.({ message: err.message });
-      } else {
-        console.error("An unexpected error occurred:", err);
-        errorCallback?.({ message: "An unexpected error occurred." });
-      }
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred.";
+      setAlertInfo({
+        message: `Đăng nhập thất bại: ${errorMessage}`,
+        severity: "error",
+      });
+      errorCallback?.({ message: errorMessage });
     }
   };
 
@@ -65,18 +78,17 @@ export const UserProvider = ({ children }: Props) => {
     errorCallback?: ErrCallbackType
   ) => {
     try {
-      const response = await authApi.register(params);
-      // Assuming registration is successful and redirects to login
-      console.log("Registration successful:", response?.message);
+      await authApi.register(params);
+      setAlertInfo({
+        message: "Đăng ký tài khoản thành công",
+        severity: "success",
+      });
       navigate("/login");
     } catch (err) {
-      if (err instanceof Error) {
-        console.error("Registration failed:", err.message);
-        errorCallback?.({ message: err.message });
-      } else {
-        console.error("An unexpected error occurred:", err);
-        errorCallback?.({ message: "An unexpected error occurred." });
-      }
+      const errorMessage =
+        err instanceof Error ? err.message : "Tài khoản này đã tồn tại";
+      setAlertInfo({ message: errorMessage, severity: "error" });
+      errorCallback?.({ message: errorMessage });
     }
   };
 
@@ -85,11 +97,14 @@ export const UserProvider = ({ children }: Props) => {
   const handleLogout = () => {
     setUser(null);
     setToken(null);
-
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-
+    setAlertInfo({ message: "Đăng xuất thành công.", severity: "info" });
     navigate("/login");
+  };
+
+  const handleCloseAlert = () => {
+    setAlertInfo(undefined);
   };
 
   const values: UserContextType = {
@@ -102,12 +117,29 @@ export const UserProvider = ({ children }: Props) => {
     registerUser: handleRegister,
     logout: handleLogout,
     isLoggedIn,
+    alert,
+    setAlert,
+    alertInfo: alertInfo,
   };
 
   return (
-    <UserContext.Provider value={values}>
-      {!loading ? children : <div>Loading...</div>}
-    </UserContext.Provider>
+    <>
+      <Snackbar
+        open={alert}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        {alertInfo && (
+          <Alert severity={alertInfo.severity} onClose={handleCloseAlert}>
+            {alertInfo.message}
+          </Alert>
+        )}
+      </Snackbar>
+      <UserContext.Provider value={values}>
+        {!loading ? children : <div>Loading...</div>}
+      </UserContext.Provider>
+    </>
   );
 };
 

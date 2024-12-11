@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Box, Grid, CircularProgress, Typography } from "@mui/material";
 import { useParams } from "react-router-dom"; // Import useParams to access URL params
 import jobApi from "../../api/job";
-import { JobPost } from "../../api/types";
+import { JobPost as OriginalJobPost } from "../../api/types";
 import JobCard from "./JobCard";
-
+interface JobPost extends OriginalJobPost {
+  id: string;
+}
 const Job: React.FC = () => {
-  const { major } = useParams();
+  const { major, mayjor } = useParams();
   const [jobs, setJobs] = useState<JobPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,12 +17,20 @@ const Job: React.FC = () => {
     const fetchJobs = async () => {
       setLoading(true);
       try {
-        if (major) {
+        console.log(major);
+        console.log(mayjor);
+        if (mayjor && major) {
+          const fetchedJobs = await jobApi.getJobsByMayjorOrMajor(
+            major,
+            mayjor
+          ); // Fetch jobs by major from API
+          setJobs(fetchedJobs as JobPost[]);
+        } else if (major) {
           const fetchedJobs = await jobApi.getJobsByMajor(major); // Fetch jobs by major from API
-          setJobs(fetchedJobs);
+          setJobs(fetchedJobs as JobPost[]);
         } else {
           const fetchedJobs = await jobApi.getAllJobPosts(); // Fetch all jobs if no major is provided
-          setJobs(fetchedJobs);
+          setJobs(fetchedJobs as JobPost[]);
         }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {

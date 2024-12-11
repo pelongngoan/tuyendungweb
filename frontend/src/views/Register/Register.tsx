@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import "./Register.css";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Alert,
+} from "@mui/material";
 import { useAuth } from "../../context/useAuth";
 
 const Register = () => {
@@ -11,69 +18,102 @@ const Register = () => {
     password: "",
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setError(null); // Clear error on input change
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    registerUser(formData);
+    try {
+      await registerUser(formData, (err) => setError(err.message));
+    } catch (err) {
+      console.log(err);
+
+      setError("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
-    <div className="card-container">
-      <h3>Register Form</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Đăng ký tài khoản
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{ mt: 3, width: "100%" }}
+        >
+          <TextField
+            required
+            fullWidth
             id="firstName"
+            label="Tên"
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            required
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
+          <TextField
+            required
+            fullWidth
             id="lastName"
+            label="Họ"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            required
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
+          <TextField
+            required
+            fullWidth
             id="email"
+            label="Địa chỉ email"
             name="email"
+            type="email"
             value={formData.email}
             onChange={handleChange}
-            required
+            margin="normal"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
+          <TextField
+            required
+            fullWidth
             id="password"
+            label="Mật khẩu"
             name="password"
+            type="password"
             value={formData.password}
             onChange={handleChange}
-            required
+            margin="normal"
           />
-        </div>
-        <button type="submit" className="register-button">
-          Register
-        </button>
-      </form>
-    </div>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Đăng ký tài khoản
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

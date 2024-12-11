@@ -11,11 +11,50 @@ import {
 } from "@mui/material";
 import { navigation } from "../navigation";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { JobPost } from "../api/types";
+import jobApi from "../api/job";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
+  const [jobResults, setJobResults] = useState<JobPost[]>([]);
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  useEffect(() => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout); // Clear previous timeout if user keeps typing
+    }
 
+    if (searchText.trim()) {
+      const timeout = setTimeout(async () => {
+        try {
+          console.log(
+            `Searching for jobs with title containing: ${searchText}`
+          );
+          const jobs = await jobApi.searchJobsByTitle(searchText); // API call
+          setJobResults(jobs);
+        } catch (error) {
+          console.error("Error fetching jobs:", error);
+        }
+      }, 2000);
+
+      setTypingTimeout(timeout);
+    } else {
+      setJobResults([]); // Clear results when input is empty
+    }
+
+    return () => {
+      if (typingTimeout) clearTimeout(typingTimeout);
+    };
+  }, [searchText]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
   const handleNavigation = (destination: string) => {
+    console.log(destination);
+
     navigate(`/${destination}`);
   };
   return (
@@ -26,11 +65,13 @@ const Home = () => {
           <Typography variant="h4" fontWeight="bold">
             Khám phá 15000+ việc làm mới hàng tháng!
           </Typography>
-          <Box mt={2} display="flex" justifyContent="center ">
+          <Box mt={2} display="flex" justifyContent="center">
             <TextField
               fullWidth
               placeholder="Tìm kiếm việc làm"
               variant="outlined"
+              value={searchText}
+              onChange={handleInputChange}
               sx={{ backgroundColor: "white", borderRadius: 1, mr: 2 }}
             />
             <Button
@@ -43,7 +84,38 @@ const Home = () => {
           </Box>
         </Container>
       </Box>
-
+      {/* Job Results Section */}
+      <Container sx={{ py: 4 }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Kết quả tìm kiếm việc làm
+        </Typography>
+        <Grid container spacing={2}>
+          {jobResults.map((job, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Card elevation={3}>
+                <CardContent>
+                  <Typography variant="h6">{job.title}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {job.company} - {job.location}
+                  </Typography>
+                  <Typography variant="body1" mt={2}>
+                    {job.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+          {!jobResults.length && (
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{ mt: 2, width: "100%" }}
+            >
+              Không có kết quả phù hợp.
+            </Typography>
+          )}
+        </Grid>
+      </Container>
       {/* Career Exploration Section */}
       <Container sx={{ py: 4 }}>
         <Typography variant="h5" align="center" gutterBottom>

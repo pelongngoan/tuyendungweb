@@ -35,13 +35,17 @@ export const Header = ({
 }: HeaderProps) => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorElChildren, setAnchorElChildren] = useState<null | HTMLElement>(
+    null
+  );
+
   const [menuItems, setMenuItems] = useState<NavItem[]>([]);
+  const [menuItemsChildren, setMenuItemsChildren] = useState<NavItem[]>([]);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [avatarMenuAnchor, setAvatarMenuAnchor] = useState<null | HTMLElement>(
     null
   );
-  console.log(anchorEl);
-  console.log(drawerOpen);
 
   const handleOpenMenu = (
     event: React.MouseEvent<HTMLElement>,
@@ -53,6 +57,17 @@ export const Header = ({
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+  const handleOpenMenuChildren = (
+    event: React.MouseEvent<HTMLElement>,
+    children?: NavItem[]
+  ) => {
+    setAnchorElChildren(event.currentTarget);
+    setMenuItemsChildren(children || []);
+  };
+
+  const handleCloseMenuChildren = () => {
+    setAnchorElChildren(null);
   };
 
   const toggleDrawer = (open: boolean) => {
@@ -118,36 +133,96 @@ export const Header = ({
                   {nav.title}
                 </Button>
               ) : (
-                <Button
-                  key={index}
-                  sx={{
-                    color: "white",
-                    textTransform: "capitalize",
-                    fontWeight: 500,
-                    borderRadius: "8px",
-                    padding: "6px 12px",
-                    "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                    },
-                  }}
-                  onClick={() => onNavigate(nav.path)}
-                >
-                  {nav.title}
-                </Button>
+                <>
+                  {!nav.access ? (
+                    <>
+                      {user?.role === "ADMIN" ? (
+                        <Button
+                          key={index}
+                          sx={{
+                            color: "white",
+                            textTransform: "capitalize",
+                            fontWeight: 500,
+                            borderRadius: "8px",
+                            padding: "6px 12px",
+                            "&:hover": {
+                              backgroundColor: "rgba(255, 255, 255, 0.2)",
+                            },
+                          }}
+                          onClick={() => onNavigate(nav.path)}
+                        >
+                          {nav.title}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  ) : (
+                    <Button
+                      key={index}
+                      sx={{
+                        color: "white",
+                        textTransform: "capitalize",
+                        fontWeight: 500,
+                        borderRadius: "8px",
+                        padding: "6px 12px",
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        },
+                      }}
+                      onClick={() => onNavigate(nav.path)}
+                    >
+                      {nav.title}
+                    </Button>
+                  )}
+                </>
               )
             )}
 
             <Menu
               anchorEl={anchorEl}
+              // anchorOrigin={{
+              //   vertical: "bottom",
+              //   horizontal: "right",
+              // }}
+              // transformOrigin={{
+              //   vertical: "top",
+              //   horizontal: "right",
+              // }}
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
             >
               {menuItems.map((child, childIndex) => (
                 <MenuItem
                   key={childIndex}
+                  onClick={(event) => {
+                    handleOpenMenuChildren(event, child.children);
+                  }}
+                >
+                  {child.icon}
+                  {child.title}
+                </MenuItem>
+              ))}
+            </Menu>
+            <Menu
+              anchorEl={anchorElChildren}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElChildren)}
+              onClose={handleCloseMenuChildren}
+            >
+              {menuItemsChildren.map((child, childIndex) => (
+                <MenuItem
+                  key={childIndex}
                   onClick={() => {
                     handleCloseMenu();
-                    onNavigate(child.path);
+                    onNavigate(`job${child.path}`);
                   }}
                 >
                   {child.icon}

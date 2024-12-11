@@ -18,6 +18,8 @@ import JobApplicationForm from "../views/Job/JobApplicationForm";
 import Internship from "../views/Internship/Internship";
 import InternshipApplicationForm from "../views/Internship/InternshipApplicationForm";
 import InternshipDetail from "../views/Internship/InternshipDetail";
+import AdminRoute from "./AdminRoute";
+import ChatBox from "../views/ChatBox/ChatBox";
 
 export const router = createBrowserRouter([
   {
@@ -62,54 +64,28 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "job/:major/:mayjor",
+        element: (
+          <ProtectedRoute>
+            <Job />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "job/:major",
         element: (
           <ProtectedRoute>
             <Job />
           </ProtectedRoute>
         ),
-        children: [
-          {
-            path: "english",
-            element: <Job />,
-          },
-          {
-            path: "tradition",
-            element: <Job />,
-          },
-          {
-            path: "korean",
-            element: <Job />,
-          },
-          {
-            path: "japanese",
-            element: <Job />,
-          },
-          {
-            path: "russia",
-            element: <Job />,
-          },
-          {
-            path: "chinese",
-            element: <Job />,
-          },
-          {
-            path: "arap",
-            element: <Job />,
-          },
-          {
-            path: "economy",
-            element: <Job />,
-          },
-          {
-            path: "german",
-            element: <Job />,
-          },
-          {
-            path: "french",
-            element: <Job />,
-          },
-        ],
+      },
+      {
+        path: "job",
+        element: (
+          <ProtectedRoute>
+            <Job />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/jobDetail/:id",
@@ -132,6 +108,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Company />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "chatBox",
+        element: (
+          <ProtectedRoute>
+            <ChatBox />
           </ProtectedRoute>
         ),
       },
@@ -170,9 +154,17 @@ export const router = createBrowserRouter([
       {
         path: "createJob",
         element: (
-          <ProtectedRoute>
+          <AdminRoute>
             <JobApplicationForm />
-          </ProtectedRoute>
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "job/editJob/:id",
+        element: (
+          <AdminRoute>
+            <JobApplicationForm />
+          </AdminRoute>
         ),
       },
       {

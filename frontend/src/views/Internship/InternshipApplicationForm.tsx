@@ -135,9 +135,9 @@ const InternshipApplicationForm = () => {
             {/* Mayjor Select */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required variant="outlined">
-                <InputLabel>Chuyên ngành tuyển dụng</InputLabel>
+                <InputLabel>Hệ tuyển dụng</InputLabel>
                 <Select
-                  label="Chuyên ngành tuyển dụng"
+                  label="Hệ tuyển dụng"
                   name="mayjor"
                   value={formData.mayjor}
                   onChange={(e) => handleChangeSelect(e)}

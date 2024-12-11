@@ -19,6 +19,12 @@ import { useAuth } from "../../context/useAuth";
 import CustomAlert from "../../components/CustomAlert";
 import authApi from "../../api/auth";
 import { RegisterParams } from "../../context/types";
+import {
+  MAJOR,
+  MAJOR_TRANSLATION,
+  MAYJOR,
+  MAYJOR_TRANSLATION,
+} from "../../api/enum";
 
 export const Profile = () => {
   const { user } = useAuth(); // Get the user from the context
@@ -31,40 +37,13 @@ export const Profile = () => {
     age: user?.age || 0,
     location: user?.location || "",
     major: user?.major || "",
+    cn: user?.cn || "",
     phone: user?.phone || "",
   });
   console.log(userData);
 
   const [editableField, setEditableField] = useState<string | null>(null); // Track which field is being edited
   const [message, setMessage] = useState("");
-
-  const majors = [
-    { label: "Tiếng Anh", value: "England" },
-    { label: "Tiếng Ả Rập", value: "Arab" },
-    { label: "Tiếng Trung", value: "China" },
-    { label: "Tiếng Pháp", value: "France" },
-    { label: "Tiếng Đức", value: "Germany" },
-    { label: "Tiếng Nhật", value: "Japan" },
-    { label: "Tiếng Hàn", value: "Korea" },
-    { label: "Tiếng Nga", value: "Russia" },
-    { label: "Kinh tế", value: "Economy" },
-    { label: "Văn hóa", value: "Tradition" },
-  ];
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     if (user) {
-  //       try {
-  //         const response = await authApi.getUserByID(user.id); // Use the correct user ID from context
-  //         setUserData(response.user || {}); // Ensure default empty object if no user data is found
-  //       } catch (error) {
-  //         setMessage("Error fetching user data");
-  //       }
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, [user]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,11 +53,22 @@ export const Profile = () => {
     }));
   };
 
-  const handleSelectChange = (e: SelectChangeEvent<string>) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      major: e.target.value,
-    }));
+  const handleChangeSelect = (e: SelectChangeEvent<string>) => {
+    const { name, value } = e.target;
+    setEditableField(name);
+    if (name === "major") {
+      setUserData((prevData) => ({
+        ...prevData,
+        major: value as keyof typeof MAYJOR, // Ensure the value is of the correct type
+      }));
+    }
+
+    if (name === "cn") {
+      setUserData((prevData) => ({
+        ...prevData,
+        cn: value as keyof typeof MAJOR, // Ensure the value is of the correct type
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,40 +161,44 @@ export const Profile = () => {
               {renderField("phone", "Phone", editableField === "phone")}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="h6">Ngành học</Typography>
-              {editableField === "major" ? (
-                <FormControl fullWidth>
-                  <InputLabel>Ngành học</InputLabel>
-                  <Select
-                    value={userData.major}
-                    onChange={handleSelectChange}
-                    label="Ngành học"
-                    name="major"
-                  >
-                    {majors.map((major) => (
-                      <MenuItem key={major.value} value={major.value}>
-                        {major.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : (
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
+              <FormControl fullWidth required variant="outlined">
+                <InputLabel>Hệ theo học</InputLabel>
+                <Select
+                  label="Hệ theo học"
+                  name="major"
+                  value={userData.major || ""}
+                  onChange={(e) => handleChangeSelect(e)}
+                  renderValue={(value) =>
+                    MAYJOR_TRANSLATION[value as keyof typeof MAYJOR] || ""
+                  }
                 >
-                  <Typography variant="body1" flexGrow={1}>
-                    {userData.major || "No data available"}
-                  </Typography>
-                  <IconButton
-                    onClick={() => handleEditClick("major")}
-                    color="primary"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Box>
-              )}
+                  {Object.entries(MAYJOR).map(([key, value]) => (
+                    <MenuItem key={key} value={value}>
+                      {MAYJOR_TRANSLATION[value]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required variant="outlined">
+                <InputLabel>Chuyên ngành đào tạo</InputLabel>
+                <Select
+                  label="Chuyên ngành đào tạo"
+                  name="cn"
+                  value={userData.cn || ""} // Ensure cn is a string, default to an empty string if undefined
+                  onChange={(e) => handleChangeSelect(e)}
+                  renderValue={(value) =>
+                    MAJOR_TRANSLATION[value as keyof typeof MAJOR] || ""
+                  }
+                >
+                  {Object.entries(MAJOR).map(([key, value]) => (
+                    <MenuItem key={key} value={value}>
+                      {MAJOR_TRANSLATION[value]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
 
             {/* Submit Button */}

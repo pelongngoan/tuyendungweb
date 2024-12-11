@@ -8,7 +8,9 @@ const UserLayout = () => {
   const navigate = useNavigate();
 
   const handleNavigation = (destination: string) => {
-    navigate(`/${destination}`);
+    console.log(destination);
+
+    navigate(destination);
   };
   const handleLogout = () => {
     logout();

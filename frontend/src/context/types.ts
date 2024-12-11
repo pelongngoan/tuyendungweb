@@ -9,8 +9,10 @@ export interface UserDataType {
   age?: number;
   location?: string;
   major?: string;
+  cn?: string;
   phone?: string;
-  role?: string;
+  role?: "ADMIN" | "USER";
+  imageUrl: string;
 }
 
 export interface UserContextType {
@@ -29,6 +31,14 @@ export interface UserContextType {
   ) => Promise<void>;
   logout: () => void;
   isLoggedIn: () => boolean;
+  alert: boolean;
+  setAlert: React.Dispatch<React.SetStateAction<boolean>>;
+  alertInfo:
+    | {
+        message: string;
+        severity: "success" | "error" | "info" | "warning";
+      }
+    | undefined;
 }
 
 export interface LoginParams {
@@ -44,6 +54,7 @@ export interface RegisterParams {
   age?: number;
   location?: string;
   major?: string;
+  cn?: string;
   phone?: string;
   role?: string;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Grid,
@@ -16,12 +16,20 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import jobApi from "../../api/job";
 import { JobPost } from "../../api/types";
-import { MAYJOR, MAYJOR_TRANSLATION } from "../../api/enum";
+import {
+  MAJOR,
+  MAJOR_TRANSLATION,
+  MAYJOR,
+  MAYJOR_TRANSLATION,
+} from "../../api/enum";
 import { serverTimestamp } from "firebase/firestore";
-
+import { useParams } from "react-router-dom";
+// interface JobApplicationFormParams {
+//   dataParams?: JobPost;
+// }
 const JobApplicationForm = () => {
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState<JobPost>({
-    id: "",
     company: "",
     title: "",
     location: "",
@@ -31,10 +39,27 @@ const JobApplicationForm = () => {
     benefit: "",
     experience: "",
     mayjor: [],
+    major: [],
     other: [],
-    createdAt: serverTimestamp(),
+    imageUrl: "",
+    createdAt: "",
+    expireDate: new Date(Date.now()),
   });
+  useEffect(() => {
+    if (id) {
+      const fetchJobBy = async () => {
+        try {
+          console.log("first");
 
+          const fetchedJob = await jobApi.getJobById(id);
+          setFormData(fetchedJob!);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchJobBy();
+    }
+  }, [id]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -43,9 +68,10 @@ const JobApplicationForm = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value as string[],
+      [name]: Array.isArray(value) ? value : [value], // Ensure it is always an array
     }));
   };
+
   const handleQuillChange = (field: keyof JobPost, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -73,16 +99,22 @@ const JobApplicationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, createdAt, ...submitData } = formData;
-      const jobPostId = await jobApi.createJobPost(submitData as JobPost);
-      alert(`Job post created successfully with ID: ${jobPostId}`);
+      if (!id) {
+        formData.createdAt = serverTimestamp();
+        const jobPostId = await jobApi.createJobPost(formData);
+        alert(`Job post created successfully with ID: ${jobPostId}`);
+      } else {
+        const jobPostId = await jobApi.updateJobPost(id!, formData);
+        alert(`Job post updated successfully with ID: ${jobPostId}`);
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert("Failed to create job post. Please try again.");
     }
   };
-
+  // const handleDateChange = (date: Date | null) => {
+  //   setFormData((prev) => ({ ...prev, expireDate: date }));
+  // };
   return (
     <Container sx={{ mt: 4 }}>
       <Paper
@@ -169,11 +201,11 @@ const JobApplicationForm = () => {
             {/* Mayjor Select */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required variant="outlined">
-                <InputLabel>Chuyên ngành tuyển dụng</InputLabel>
+                <InputLabel>Hệ tuyển dụng</InputLabel>
                 <Select
-                  label="Chuyên ngành tuyển dụng"
+                  label="Hệ tuyển dụng"
                   name="mayjor"
-                  value={formData.mayjor}
+                  value={formData.mayjor || []} // Ensure a default empty array
                   onChange={handleChangeSelect}
                   multiple
                   renderValue={(selected) => {
@@ -190,7 +222,74 @@ const JobApplicationForm = () => {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required variant="outlined">
+                <InputLabel>Chuyên ngành tuyển dụng</InputLabel>
+                <Select
+                  label="Chuyên ngành tuyển dụng"
+                  name="major"
+                  value={formData.major || []} // Ensure a default empty array
+                  onChange={handleChangeSelect}
+                  multiple
+                  renderValue={(selected) => {
+                    return selected
+                      .map((value) => MAJOR_TRANSLATION[value] || value)
+                      .join(", ");
+                  }}
+                >
+                  {Object.entries(MAJOR).map(([key, value]) => (
+                    <MenuItem key={key} value={value}>
+                      {MAJOR_TRANSLATION[value]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* Image URL Field */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Link hình ảnh"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              />
+            </Grid>
+            {/* <Grid item xs={12} sm={6}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Ngày hết hạn"
+                  value={formData.expireDate}
+                  onChange={handleDateChange}
+                />
+              </LocalizationProvider>
+            </Grid> */}
           </Grid>
+
+          {/* Image Preview */}
+          {formData.imageUrl && (
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Ảnh công ty:</Typography>
+                <img
+                  src={formData.imageUrl}
+                  alt="Preview"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "300px",
+                    borderRadius: "8px",
+                    marginTop: "8px",
+                  }}
+                />
+              </Grid>
+            </Grid>
+          )}
 
           {/* Detailed Info Row */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -322,7 +421,7 @@ const JobApplicationForm = () => {
                   },
                 }}
               >
-                Tạo đơn tuyển dụng
+                {id ? "Cập nhật đơn tuyển dụng" : "Tạo đơn tuyển dụng"}
               </Button>
             </Grid>
           </Grid>

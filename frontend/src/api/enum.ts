@@ -14,6 +14,12 @@ enum MAYJOR {
   Economy = "Economy",
   Tradition = "Tradition",
 }
+enum MAJOR {
+  Translator = "Translator",
+  Education = "Education",
+  Travel = "Travel",
+  Other = "Other",
+}
 export const MAYJOR_TRANSLATION = {
   [MAYJOR.England]: "Anh",
   [MAYJOR.Arab]: "Ả Rập",
@@ -26,4 +32,10 @@ export const MAYJOR_TRANSLATION = {
   [MAYJOR.Economy]: "Kinh tế",
   [MAYJOR.Tradition]: "Truyền thống",
 };
-export { ROLE, MAYJOR };
+export const MAJOR_TRANSLATION = {
+  [MAJOR.Education]: "Giáo dục",
+  [MAJOR.Translator]: "Biên phiên dịch",
+  [MAJOR.Travel]: "Du lịch",
+  [MAJOR.Other]: "Các ngành khác",
+};
+export { ROLE, MAYJOR, MAJOR };

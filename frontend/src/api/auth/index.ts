@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../db/firebaseConfig";
 import { LoginParams, RegisterParams } from "../types";
+import { UserDataType } from "../../context/types";
 
 const userColRef = collection(db, "user");
 
@@ -27,17 +28,16 @@ const authApi = {
 
       if (!querySnapshot.empty) {
         // Email already exists
-        throw new Error("Email is already in use");
+        throw new Error("Email này đã tồn tại");
       }
 
       // Add the new user to Firestore
       const newUser = {
         email: data.email,
-        password: data.password, // Store the password (consider hashing in production)
+        password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
         createdAt: new Date().toISOString(),
-        // Include any other fields you may want to store
       };
 
       // Add the new user document to the Firestore collection
@@ -67,18 +67,14 @@ const authApi = {
         const userDoc = querySnapshot.docs[0];
         const userData = userDoc.data();
 
-        // Validate the password (assuming plain text, change to hashed check if needed)
         if (userData.password === data.password) {
-          // Remove the password from the returned data
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { password, ...userWithoutPassword } = userData;
-
-          // Return user data along with the user ID combined into a single object
           return {
             user: {
               ...userWithoutPassword,
-              id: userDoc.id, // Add the user ID to the user object
-            },
+              id: userDoc.id,
+            } as UserDataType,
           };
         } else {
           throw new Error("Incorrect password");

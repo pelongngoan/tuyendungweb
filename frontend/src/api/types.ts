@@ -1,5 +1,5 @@
 import { FieldValue } from "firebase/firestore";
-import { MAYJOR } from "./enum";
+import { MAJOR, MAYJOR } from "./enum";
 
 export interface RegisterParams {
   email?: string;
@@ -18,7 +18,6 @@ export interface LoginParams {
   password: string;
 }
 export interface JobPost {
-  id: string;
   company: string;
   title: string;
   location: string;
@@ -28,7 +27,10 @@ export interface JobPost {
   benefit: string;
   experience: string;
   mayjor: MAYJOR[];
-  createdAt: FieldValue;
+  major: MAJOR[];
+  createdAt: FieldValue | "";
+  expireDate: Date | null;
+  imageUrl: string;
   other: { label: string; content: string }[];
 }
 

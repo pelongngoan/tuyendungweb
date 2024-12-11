@@ -8,6 +8,7 @@ import {
   updateDoc,
   query,
   where,
+  and,
 } from "firebase/firestore";
 import { db } from "../../db/firebaseConfig";
 import { JobPost } from "../types";
@@ -15,18 +16,24 @@ import { JobPost } from "../types";
 const jobPostsColRef = collection(db, "jobs");
 
 const jobApi = {
-  getJobsByMajor: async (major: string): Promise<JobPost[]> => {
+  getJobsByMayjorOrMajor: async (
+    major: string,
+    cn: string
+  ): Promise<JobPost[]> => {
     try {
-      console.log("Fetching jobs for major:", major);
-
-      const q = query(jobPostsColRef, where("mayjor", "array-contains", major));
+      const q = query(
+        jobPostsColRef,
+        and(
+          where("mayjor", "array-contains", major),
+          where("major", "array-contains", cn)
+        )
+      );
       const querySnapshot = await getDocs(q);
 
-      // If there are documents, map them to job posts
       const jobPosts: JobPost[] = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-          id: doc.id,
+          id: doc.id as string,
           company: data.company || "",
           title: data.title || "",
           location: data.location || "",
@@ -37,7 +44,57 @@ const jobApi = {
           experience: data.experience || "",
           mayjor: data.mayjor || [],
           other: data.other || [],
+          imageUrl: data.imageUrl || "",
+          createdAt: data.createdAt || "",
+          expireDate: data.expireDate || "",
+          major: data.major || [],
+        };
+      });
+
+      console.log("Fetched jobs by mayjor or major:", jobPosts);
+      return jobPosts;
+    } catch (error) {
+      console.error("Error fetching jobs by mayjor or major:", error);
+      throw error;
+    }
+  },
+
+  searchJobsByTitle: async (title: string) => {
+    const q = query(
+      jobPostsColRef,
+      where("title", ">=", title),
+      where("title", "<=", title + "\uf8ff")
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  },
+  getJobsByMajor: async (major: string): Promise<JobPost[]> => {
+    try {
+      const q = query(jobPostsColRef, where("mayjor", "array-contains", major));
+      const querySnapshot = await getDocs(q);
+
+      // If there are documents, map them to job posts
+      const jobPosts: JobPost[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id as string,
+          company: data.company || "",
+          title: data.title || "",
+          location: data.location || "",
+          salary: data.salary || "",
+          description: data.description || "",
+          requirements: data.requirements || "",
+          benefit: data.benefit || "",
+          experience: data.experience || "",
+          mayjor: data.mayjor || [],
+          other: data.other || [],
+          imageUrl: data.imageUrl || "",
           createdAt: data.createAt || "",
+          expireDate: data.expireDate || "",
+          major: data.major || [],
         };
       });
 
@@ -57,7 +114,7 @@ const jobApi = {
       const jobPosts: JobPost[] = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-          id: doc.id,
+          id: doc.id as string,
           company: data.company || "", // Default value
           title: data.title || "",
           location: data.location || "",
@@ -68,7 +125,10 @@ const jobApi = {
           experience: data.experience || "",
           mayjor: data.mayjor || [],
           other: data.other || [],
+          imageUrl: data.imageUrl || "",
           createdAt: data.createdAt || "",
+          expireDate: data.expireDate || "",
+          major: data.major || [],
         };
       });
       return jobPosts;
@@ -81,14 +141,13 @@ const jobApi = {
   // Get a job post by its ID
   getJobById: async (jobId: string): Promise<JobPost | null> => {
     try {
-      console.log("first");
-
       const jobDocRef = doc(db, "jobs", jobId);
       const jobDocSnapshot = await getDoc(jobDocRef);
-      console.log(jobDocSnapshot);
+      console.log("sss");
 
       if (jobDocSnapshot.exists()) {
-        return { id: jobDocSnapshot.id, ...jobDocSnapshot.data() } as JobPost;
+        const jobData = jobDocSnapshot.data();
+        return jobData as JobPost;
       } else {
         console.log("No such job post found!");
         return null;
@@ -103,7 +162,6 @@ const jobApi = {
   createJobPost: async (newJobPost: JobPost): Promise<string> => {
     try {
       const docRef = await addDoc(jobPostsColRef, newJobPost);
-      console.log("Job post created with ID:", docRef.id);
       return docRef.id;
     } catch (error) {
       console.error("Error creating job post:", error);
