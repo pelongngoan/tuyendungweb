@@ -138,7 +138,7 @@ const Home = () => {
       {/* Career Exploration Section */}
       <Container sx={{ py: 6 }}>
         <Typography variant="h5" align="center" gutterBottom>
-          KHÁM PHÁ NGHỀ NGHIỆP MƠ ƯỜA
+          KHÁM PHÁ NGHỀ NGHIỆP MƠ ƯỚC
         </Typography>
         <Typography variant="subtitle1" align="center" mb={4}>
           Tìm hiểu nghề nghiệp phù hợp với bạn
