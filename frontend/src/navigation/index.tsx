@@ -80,11 +80,11 @@ export const navigation = (): NavItem[] => [
         icon: (
           <img
             src={England}
-            alt="English"
+            alt="England"
             style={{ width: "24px", height: "24px" }}
           />
         ),
-        children: createLanguageChildren("English"),
+        children: createLanguageChildren("England"),
       },
       {
         title: "Văn hóa và truyền thông xuyên quốc gia",
