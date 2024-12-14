@@ -81,7 +81,8 @@ export const Profile = () => {
     e.preventDefault();
 
     try {
-      await authApi.updateUser(user?.id, userData); // Call API to update user data
+      const res = await authApi.updateUser(user?.id, userData); // Call API to update user data
+      localStorage.setItem("user", JSON.stringify(res));
       setMessage("Cập nhật thông tin người dùng thành công!"); // Success message
       setEditableField(null); // Exit editing mode after successful update
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
